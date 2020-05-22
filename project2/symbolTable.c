@@ -114,6 +114,7 @@ node* insert(table *insertTable,char *str,char *type){
 	*/
 	if(entry == NULL){
 		entry = malloc(sizeof(list_head));
+		insertTable->idTable[hash_f(str)] = entry;
 		entry->head = temp_n;
 		entry->tail = temp_n;
 	}
@@ -130,12 +131,14 @@ node* insert(table *insertTable,char *str,char *type){
 //show the specific symbol table  
 void dump(table *dumpTable){
 	//let user know we will print symbol table
-	printf("dump symbol table:\n");
+	printf("dump symbol table (%p):\n",tableList);
 	//print every entry and linked list behind of entry
 	for(int i = 0 ; i < idTable_size; i++){
 		list_head *entry = NULL;
 		node *now = NULL;
 		entry = dumpTable->idTable[i];
+		if(entry == NULL)
+			continue;
 		now = entry->head;
 		while(now != NULL){
 			printf(" %s",now->idName);
