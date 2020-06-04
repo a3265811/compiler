@@ -1,0 +1,3184 @@
+Terminals unused in grammar
+
+   PERIOD
+   SEMICOLON
+   REPEAT
+   DO
+   TRUE
+   FALSE
+   CONTINUE
+   BREAK
+   EXIT
+   CASE
+   TYPE
+   NULL_LITERAL
+   CLASS
+
+
+State 7 conflicts: 3 shift/reduce
+State 13 conflicts: 3 shift/reduce
+State 22 conflicts: 2 shift/reduce
+State 133 conflicts: 4 shift/reduce
+State 179 conflicts: 1 shift/reduce
+
+
+Grammar
+
+    0 $accept: program $end
+
+    1 $@1: %empty
+
+    2 program: OBJECT $@1 identifier LEFT_CURLY program_body RIGHT_CURLY
+
+    3 program_body: program_dec program_funcs program_dec
+    4             | program_funcs program_dec program_funcs
+
+    5 program_dec: val_dec
+    6            | program_dec val_dec
+    7            | var_dec
+    8            | program_dec var_dec
+    9            | array_dec
+   10            | program_dec array_dec
+   11            | %empty
+
+   12 program_funcs: func_def
+   13              | program_funcs func_def
+
+   14 val_dec: VAL identifier ASSIGN expr
+   15        | VAL identifier COLON types ASSIGN expr
+
+   16 var_dec: VAR identifier
+   17        | VAR identifier COLON types
+   18        | VAR identifier ASSIGN expr
+   19        | VAR identifier COLON types ASSIGN expr
+
+   20 array_dec: VAR identifier COLON types LEFT_SQUARE INT_LITERAL RIGHT_SQUARE
+
+   21 $@2: %empty
+
+   22 func_def: DEF identifier $@2 LEFT_PARENTHESE func_args RIGHT_PARENTHESE func_def_remain
+
+   23 func_def_remain: LEFT_CURLY block_body RIGHT_CURLY
+   24                | COLON types LEFT_CURLY block_body RIGHT_CURLY
+
+   25 func_args: func_arg_list
+   26          | %empty
+
+   27 func_arg_list: func_arg
+   28              | func_arg_list func_arg
+
+   29 func_arg: identifier COLON types
+   30         | COMMA identifier COLON types
+
+   31 stmt: assign_stmt
+   32     | print_stmt
+   33     | return_stmt
+   34     | read_stmt
+   35     | func_invo_stmt
+   36     | if_cond
+   37     | while_loop
+   38     | for_loop
+
+   39 assign_stmt: identifier ASSIGN expr
+   40            | array_id ASSIGN expr
+
+   41 print_stmt: PRINT LEFT_PARENTHESE expr RIGHT_PARENTHESE
+   42           | PRINTLN LEFT_PARENTHESE expr RIGHT_PARENTHESE
+
+   43 return_stmt: RETURN return_body
+
+   44 return_body: expr
+   45            | %empty
+
+   46 read_stmt: READ identifier
+
+   47 func_invo_stmt: identifier LEFT_PARENTHESE func_invo_args RIGHT_PARENTHESE
+
+   48 func_invo_args: func_invo_arg
+   49               | func_invo_args COMMA func_invo_arg
+
+   50 func_invo_arg: expr
+
+   51 if_cond: IF LEFT_PARENTHESE expr RIGHT_PARENTHESE cond_body
+   52        | IF LEFT_PARENTHESE expr RIGHT_PARENTHESE cond_body ELSE cond_body
+
+   53 cond_body: block
+   54          | stmt
+
+   55 while_loop: WHILE LEFT_PARENTHESE expr RIGHT_PARENTHESE while_body
+
+   56 while_body: block
+   57           | stmt
+
+   58 for_loop: FOR LEFT_PARENTHESE identifier FOR_ASSIGN INT_LITERAL TO INT_LITERAL RIGHT_PARENTHESE loop_body
+
+   59 loop_body: block
+   60          | stmt
+
+   61 block: LEFT_CURLY block_body RIGHT_CURLY
+
+   62 block_body: val_dec
+   63           | block_body val_dec
+   64           | var_dec
+   65           | block_body var_dec
+   66           | stmt
+   67           | block_body stmt
+
+   68 expr: LEFT_PARENTHESE expr RIGHT_PARENTHESE
+   69     | '-' expr
+   70     | expr '*' expr
+   71     | expr '/' expr
+   72     | expr '+' expr
+   73     | expr '-' expr
+   74     | expr LT expr
+   75     | expr LE expr
+   76     | expr EQ expr
+   77     | expr GE expr
+   78     | expr GT expr
+   79     | expr NE expr
+   80     | '!' expr
+   81     | expr AND expr
+   82     | expr OR expr
+   83     | literals
+   84     | array_id
+   85     | func_invo_stmt
+   86     | identifier
+   87     | print_stmt
+   88     | read_stmt
+
+   89 identifier: ID
+
+   90 array_id: identifier LEFT_SQUARE expr RIGHT_SQUARE
+
+   91 types: CHAR
+   92      | INT
+   93      | FLOAT
+   94      | STRING
+   95      | BOOLEAN
+   96      | VOID
+
+   97 literals: INT_LITERAL
+   98         | REAL_LITERAL
+   99         | STRING_LITERAL
+
+
+Terminals, with rules where they appear
+
+$end (0) 0
+'!' (33) 80
+'*' (42) 70
+'+' (43) 72
+'-' (45) 69 73
+'/' (47) 71
+error (256)
+COMMA (258) 30 49
+COLON (259) 15 17 19 20 24 29 30
+PERIOD (260)
+SEMICOLON (261)
+LEFT_PARENTHESE (262) 22 41 42 47 51 52 55 58 68
+RIGHT_PARENTHESE (263) 22 41 42 47 51 52 55 58 68
+LEFT_SQUARE (264) 20 90
+RIGHT_SQUARE (265) 20 90
+LEFT_CURLY (266) 2 23 24 61
+RIGHT_CURLY (267) 2 23 24 61
+ASSIGN (268) 14 15 18 19 39 40
+FOR (269) 58
+REPEAT (270)
+DO (271)
+WHILE (272) 55
+FOR_ASSIGN (273) 58
+VAL (274) 14 15
+VAR (275) 16 17 18 19 20
+CHAR (276) 91
+INT (277) 92
+FLOAT (278) 93
+STRING (279) 94
+BOOLEAN (280) 95
+VOID (281) 96
+OBJECT (282) 2
+DEF (283) 22
+PRINT (284) 41
+PRINTLN (285) 42
+READ (286) 46
+TRUE (287)
+FALSE (288)
+IF (289) 51 52
+ELSE (290) 52
+CONTINUE (291)
+BREAK (292)
+EXIT (293)
+TO (294) 58
+CASE (295)
+RETURN (296) 43
+TYPE (297)
+NULL_LITERAL (298)
+CLASS (299)
+ID (300) 89
+INT_LITERAL (301) 20 58 97
+REAL_LITERAL (302) 98
+STRING_LITERAL (303) 99
+OR (304) 82
+AND (305) 81
+LT (306) 74
+GT (307) 78
+LE (308) 75
+GE (309) 77
+EQ (310) 76
+NE (311) 79
+UMINUS (312)
+
+
+Nonterminals, with rules where they appear
+
+$accept (63)
+    on left: 0
+program (64)
+    on left: 2, on right: 0
+$@1 (65)
+    on left: 1, on right: 2
+program_body (66)
+    on left: 3 4, on right: 2
+program_dec (67)
+    on left: 5 6 7 8 9 10 11, on right: 3 4 6 8 10
+program_funcs (68)
+    on left: 12 13, on right: 3 4 13
+val_dec (69)
+    on left: 14 15, on right: 5 6 62 63
+var_dec (70)
+    on left: 16 17 18 19, on right: 7 8 64 65
+array_dec (71)
+    on left: 20, on right: 9 10
+func_def (72)
+    on left: 22, on right: 12 13
+$@2 (73)
+    on left: 21, on right: 22
+func_def_remain (74)
+    on left: 23 24, on right: 22
+func_args (75)
+    on left: 25 26, on right: 22
+func_arg_list (76)
+    on left: 27 28, on right: 25 28
+func_arg (77)
+    on left: 29 30, on right: 27 28
+stmt (78)
+    on left: 31 32 33 34 35 36 37 38, on right: 54 57 60 66 67
+assign_stmt (79)
+    on left: 39 40, on right: 31
+print_stmt (80)
+    on left: 41 42, on right: 32 87
+return_stmt (81)
+    on left: 43, on right: 33
+return_body (82)
+    on left: 44 45, on right: 43
+read_stmt (83)
+    on left: 46, on right: 34 88
+func_invo_stmt (84)
+    on left: 47, on right: 35 85
+func_invo_args (85)
+    on left: 48 49, on right: 47 49
+func_invo_arg (86)
+    on left: 50, on right: 48 49
+if_cond (87)
+    on left: 51 52, on right: 36
+cond_body (88)
+    on left: 53 54, on right: 51 52
+while_loop (89)
+    on left: 55, on right: 37
+while_body (90)
+    on left: 56 57, on right: 55
+for_loop (91)
+    on left: 58, on right: 38
+loop_body (92)
+    on left: 59 60, on right: 58
+block (93)
+    on left: 61, on right: 53 56 59
+block_body (94)
+    on left: 62 63 64 65 66 67, on right: 23 24 61 63 65 67
+expr (95)
+    on left: 68 69 70 71 72 73 74 75 76 77 78 79 80 81 82 83 84 85
+    86 87 88, on right: 14 15 18 19 39 40 41 42 44 50 51 52 55 68 69
+    70 71 72 73 74 75 76 77 78 79 80 81 82 90
+identifier (96)
+    on left: 89, on right: 2 14 15 16 17 18 19 20 22 29 30 39 46 47
+    58 86 90
+array_id (97)
+    on left: 90, on right: 40 84
+types (98)
+    on left: 91 92 93 94 95 96, on right: 15 17 19 20 24 29 30
+literals (99)
+    on left: 97 98 99, on right: 83
+
+
+State 0
+
+    0 $accept: . program $end
+
+    OBJECT  shift, and go to state 1
+
+    program  go to state 2
+
+
+State 1
+
+    2 program: OBJECT . $@1 identifier LEFT_CURLY program_body RIGHT_CURLY
+
+    $default  reduce using rule 1 ($@1)
+
+    $@1  go to state 3
+
+
+State 2
+
+    0 $accept: program . $end
+
+    $end  shift, and go to state 4
+
+
+State 3
+
+    2 program: OBJECT $@1 . identifier LEFT_CURLY program_body RIGHT_CURLY
+
+    ID  shift, and go to state 5
+
+    identifier  go to state 6
+
+
+State 4
+
+    0 $accept: program $end .
+
+    $default  accept
+
+
+State 5
+
+   89 identifier: ID .
+
+    $default  reduce using rule 89 (identifier)
+
+
+State 6
+
+    2 program: OBJECT $@1 identifier . LEFT_CURLY program_body RIGHT_CURLY
+
+    LEFT_CURLY  shift, and go to state 7
+
+
+State 7
+
+    2 program: OBJECT $@1 identifier LEFT_CURLY . program_body RIGHT_CURLY
+
+    VAL  shift, and go to state 8
+    VAR  shift, and go to state 9
+    DEF  shift, and go to state 10
+
+    VAL  [reduce using rule 11 (program_dec)]
+    VAR  [reduce using rule 11 (program_dec)]
+    DEF  [reduce using rule 11 (program_dec)]
+
+    program_body   go to state 11
+    program_dec    go to state 12
+    program_funcs  go to state 13
+    val_dec        go to state 14
+    var_dec        go to state 15
+    array_dec      go to state 16
+    func_def       go to state 17
+
+
+State 8
+
+   14 val_dec: VAL . identifier ASSIGN expr
+   15        | VAL . identifier COLON types ASSIGN expr
+
+    ID  shift, and go to state 5
+
+    identifier  go to state 18
+
+
+State 9
+
+   16 var_dec: VAR . identifier
+   17        | VAR . identifier COLON types
+   18        | VAR . identifier ASSIGN expr
+   19        | VAR . identifier COLON types ASSIGN expr
+   20 array_dec: VAR . identifier COLON types LEFT_SQUARE INT_LITERAL RIGHT_SQUARE
+
+    ID  shift, and go to state 5
+
+    identifier  go to state 19
+
+
+State 10
+
+   22 func_def: DEF . identifier $@2 LEFT_PARENTHESE func_args RIGHT_PARENTHESE func_def_remain
+
+    ID  shift, and go to state 5
+
+    identifier  go to state 20
+
+
+State 11
+
+    2 program: OBJECT $@1 identifier LEFT_CURLY program_body . RIGHT_CURLY
+
+    RIGHT_CURLY  shift, and go to state 21
+
+
+State 12
+
+    3 program_body: program_dec . program_funcs program_dec
+    6 program_dec: program_dec . val_dec
+    8            | program_dec . var_dec
+   10            | program_dec . array_dec
+
+    VAL  shift, and go to state 8
+    VAR  shift, and go to state 9
+    DEF  shift, and go to state 10
+
+    program_funcs  go to state 22
+    val_dec        go to state 23
+    var_dec        go to state 24
+    array_dec      go to state 25
+    func_def       go to state 17
+
+
+State 13
+
+    4 program_body: program_funcs . program_dec program_funcs
+   13 program_funcs: program_funcs . func_def
+
+    VAL  shift, and go to state 8
+    VAR  shift, and go to state 9
+    DEF  shift, and go to state 10
+
+    VAL  [reduce using rule 11 (program_dec)]
+    VAR  [reduce using rule 11 (program_dec)]
+    DEF  [reduce using rule 11 (program_dec)]
+
+    program_dec  go to state 26
+    val_dec      go to state 14
+    var_dec      go to state 15
+    array_dec    go to state 16
+    func_def     go to state 27
+
+
+State 14
+
+    5 program_dec: val_dec .
+
+    $default  reduce using rule 5 (program_dec)
+
+
+State 15
+
+    7 program_dec: var_dec .
+
+    $default  reduce using rule 7 (program_dec)
+
+
+State 16
+
+    9 program_dec: array_dec .
+
+    $default  reduce using rule 9 (program_dec)
+
+
+State 17
+
+   12 program_funcs: func_def .
+
+    $default  reduce using rule 12 (program_funcs)
+
+
+State 18
+
+   14 val_dec: VAL identifier . ASSIGN expr
+   15        | VAL identifier . COLON types ASSIGN expr
+
+    COLON   shift, and go to state 28
+    ASSIGN  shift, and go to state 29
+
+
+State 19
+
+   16 var_dec: VAR identifier .
+   17        | VAR identifier . COLON types
+   18        | VAR identifier . ASSIGN expr
+   19        | VAR identifier . COLON types ASSIGN expr
+   20 array_dec: VAR identifier . COLON types LEFT_SQUARE INT_LITERAL RIGHT_SQUARE
+
+    COLON   shift, and go to state 30
+    ASSIGN  shift, and go to state 31
+
+    $default  reduce using rule 16 (var_dec)
+
+
+State 20
+
+   22 func_def: DEF identifier . $@2 LEFT_PARENTHESE func_args RIGHT_PARENTHESE func_def_remain
+
+    $default  reduce using rule 21 ($@2)
+
+    $@2  go to state 32
+
+
+State 21
+
+    2 program: OBJECT $@1 identifier LEFT_CURLY program_body RIGHT_CURLY .
+
+    $default  reduce using rule 2 (program)
+
+
+State 22
+
+    3 program_body: program_dec program_funcs . program_dec
+   13 program_funcs: program_funcs . func_def
+
+    VAL  shift, and go to state 8
+    VAR  shift, and go to state 9
+    DEF  shift, and go to state 10
+
+    VAL       [reduce using rule 11 (program_dec)]
+    VAR       [reduce using rule 11 (program_dec)]
+    $default  reduce using rule 11 (program_dec)
+
+    program_dec  go to state 33
+    val_dec      go to state 14
+    var_dec      go to state 15
+    array_dec    go to state 16
+    func_def     go to state 27
+
+
+State 23
+
+    6 program_dec: program_dec val_dec .
+
+    $default  reduce using rule 6 (program_dec)
+
+
+State 24
+
+    8 program_dec: program_dec var_dec .
+
+    $default  reduce using rule 8 (program_dec)
+
+
+State 25
+
+   10 program_dec: program_dec array_dec .
+
+    $default  reduce using rule 10 (program_dec)
+
+
+State 26
+
+    4 program_body: program_funcs program_dec . program_funcs
+    6 program_dec: program_dec . val_dec
+    8            | program_dec . var_dec
+   10            | program_dec . array_dec
+
+    VAL  shift, and go to state 8
+    VAR  shift, and go to state 9
+    DEF  shift, and go to state 10
+
+    program_funcs  go to state 34
+    val_dec        go to state 23
+    var_dec        go to state 24
+    array_dec      go to state 25
+    func_def       go to state 17
+
+
+State 27
+
+   13 program_funcs: program_funcs func_def .
+
+    $default  reduce using rule 13 (program_funcs)
+
+
+State 28
+
+   15 val_dec: VAL identifier COLON . types ASSIGN expr
+
+    CHAR     shift, and go to state 35
+    INT      shift, and go to state 36
+    FLOAT    shift, and go to state 37
+    STRING   shift, and go to state 38
+    BOOLEAN  shift, and go to state 39
+    VOID     shift, and go to state 40
+
+    types  go to state 41
+
+
+State 29
+
+   14 val_dec: VAL identifier ASSIGN . expr
+
+    LEFT_PARENTHESE  shift, and go to state 42
+    PRINT            shift, and go to state 43
+    PRINTLN          shift, and go to state 44
+    READ             shift, and go to state 45
+    ID               shift, and go to state 5
+    INT_LITERAL      shift, and go to state 46
+    REAL_LITERAL     shift, and go to state 47
+    STRING_LITERAL   shift, and go to state 48
+    '!'              shift, and go to state 49
+    '-'              shift, and go to state 50
+
+    print_stmt      go to state 51
+    read_stmt       go to state 52
+    func_invo_stmt  go to state 53
+    expr            go to state 54
+    identifier      go to state 55
+    array_id        go to state 56
+    literals        go to state 57
+
+
+State 30
+
+   17 var_dec: VAR identifier COLON . types
+   19        | VAR identifier COLON . types ASSIGN expr
+   20 array_dec: VAR identifier COLON . types LEFT_SQUARE INT_LITERAL RIGHT_SQUARE
+
+    CHAR     shift, and go to state 35
+    INT      shift, and go to state 36
+    FLOAT    shift, and go to state 37
+    STRING   shift, and go to state 38
+    BOOLEAN  shift, and go to state 39
+    VOID     shift, and go to state 40
+
+    types  go to state 58
+
+
+State 31
+
+   18 var_dec: VAR identifier ASSIGN . expr
+
+    LEFT_PARENTHESE  shift, and go to state 42
+    PRINT            shift, and go to state 43
+    PRINTLN          shift, and go to state 44
+    READ             shift, and go to state 45
+    ID               shift, and go to state 5
+    INT_LITERAL      shift, and go to state 46
+    REAL_LITERAL     shift, and go to state 47
+    STRING_LITERAL   shift, and go to state 48
+    '!'              shift, and go to state 49
+    '-'              shift, and go to state 50
+
+    print_stmt      go to state 51
+    read_stmt       go to state 52
+    func_invo_stmt  go to state 53
+    expr            go to state 59
+    identifier      go to state 55
+    array_id        go to state 56
+    literals        go to state 57
+
+
+State 32
+
+   22 func_def: DEF identifier $@2 . LEFT_PARENTHESE func_args RIGHT_PARENTHESE func_def_remain
+
+    LEFT_PARENTHESE  shift, and go to state 60
+
+
+State 33
+
+    3 program_body: program_dec program_funcs program_dec .
+    6 program_dec: program_dec . val_dec
+    8            | program_dec . var_dec
+   10            | program_dec . array_dec
+
+    VAL  shift, and go to state 8
+    VAR  shift, and go to state 9
+
+    $default  reduce using rule 3 (program_body)
+
+    val_dec    go to state 23
+    var_dec    go to state 24
+    array_dec  go to state 25
+
+
+State 34
+
+    4 program_body: program_funcs program_dec program_funcs .
+   13 program_funcs: program_funcs . func_def
+
+    DEF  shift, and go to state 10
+
+    $default  reduce using rule 4 (program_body)
+
+    func_def  go to state 27
+
+
+State 35
+
+   91 types: CHAR .
+
+    $default  reduce using rule 91 (types)
+
+
+State 36
+
+   92 types: INT .
+
+    $default  reduce using rule 92 (types)
+
+
+State 37
+
+   93 types: FLOAT .
+
+    $default  reduce using rule 93 (types)
+
+
+State 38
+
+   94 types: STRING .
+
+    $default  reduce using rule 94 (types)
+
+
+State 39
+
+   95 types: BOOLEAN .
+
+    $default  reduce using rule 95 (types)
+
+
+State 40
+
+   96 types: VOID .
+
+    $default  reduce using rule 96 (types)
+
+
+State 41
+
+   15 val_dec: VAL identifier COLON types . ASSIGN expr
+
+    ASSIGN  shift, and go to state 61
+
+
+State 42
+
+   68 expr: LEFT_PARENTHESE . expr RIGHT_PARENTHESE
+
+    LEFT_PARENTHESE  shift, and go to state 42
+    PRINT            shift, and go to state 43
+    PRINTLN          shift, and go to state 44
+    READ             shift, and go to state 45
+    ID               shift, and go to state 5
+    INT_LITERAL      shift, and go to state 46
+    REAL_LITERAL     shift, and go to state 47
+    STRING_LITERAL   shift, and go to state 48
+    '!'              shift, and go to state 49
+    '-'              shift, and go to state 50
+
+    print_stmt      go to state 51
+    read_stmt       go to state 52
+    func_invo_stmt  go to state 53
+    expr            go to state 62
+    identifier      go to state 55
+    array_id        go to state 56
+    literals        go to state 57
+
+
+State 43
+
+   41 print_stmt: PRINT . LEFT_PARENTHESE expr RIGHT_PARENTHESE
+
+    LEFT_PARENTHESE  shift, and go to state 63
+
+
+State 44
+
+   42 print_stmt: PRINTLN . LEFT_PARENTHESE expr RIGHT_PARENTHESE
+
+    LEFT_PARENTHESE  shift, and go to state 64
+
+
+State 45
+
+   46 read_stmt: READ . identifier
+
+    ID  shift, and go to state 5
+
+    identifier  go to state 65
+
+
+State 46
+
+   97 literals: INT_LITERAL .
+
+    $default  reduce using rule 97 (literals)
+
+
+State 47
+
+   98 literals: REAL_LITERAL .
+
+    $default  reduce using rule 98 (literals)
+
+
+State 48
+
+   99 literals: STRING_LITERAL .
+
+    $default  reduce using rule 99 (literals)
+
+
+State 49
+
+   80 expr: '!' . expr
+
+    LEFT_PARENTHESE  shift, and go to state 42
+    PRINT            shift, and go to state 43
+    PRINTLN          shift, and go to state 44
+    READ             shift, and go to state 45
+    ID               shift, and go to state 5
+    INT_LITERAL      shift, and go to state 46
+    REAL_LITERAL     shift, and go to state 47
+    STRING_LITERAL   shift, and go to state 48
+    '!'              shift, and go to state 49
+    '-'              shift, and go to state 50
+
+    print_stmt      go to state 51
+    read_stmt       go to state 52
+    func_invo_stmt  go to state 53
+    expr            go to state 66
+    identifier      go to state 55
+    array_id        go to state 56
+    literals        go to state 57
+
+
+State 50
+
+   69 expr: '-' . expr
+
+    LEFT_PARENTHESE  shift, and go to state 42
+    PRINT            shift, and go to state 43
+    PRINTLN          shift, and go to state 44
+    READ             shift, and go to state 45
+    ID               shift, and go to state 5
+    INT_LITERAL      shift, and go to state 46
+    REAL_LITERAL     shift, and go to state 47
+    STRING_LITERAL   shift, and go to state 48
+    '!'              shift, and go to state 49
+    '-'              shift, and go to state 50
+
+    print_stmt      go to state 51
+    read_stmt       go to state 52
+    func_invo_stmt  go to state 53
+    expr            go to state 67
+    identifier      go to state 55
+    array_id        go to state 56
+    literals        go to state 57
+
+
+State 51
+
+   87 expr: print_stmt .
+
+    $default  reduce using rule 87 (expr)
+
+
+State 52
+
+   88 expr: read_stmt .
+
+    $default  reduce using rule 88 (expr)
+
+
+State 53
+
+   85 expr: func_invo_stmt .
+
+    $default  reduce using rule 85 (expr)
+
+
+State 54
+
+   14 val_dec: VAL identifier ASSIGN expr .
+   70 expr: expr . '*' expr
+   71     | expr . '/' expr
+   72     | expr . '+' expr
+   73     | expr . '-' expr
+   74     | expr . LT expr
+   75     | expr . LE expr
+   76     | expr . EQ expr
+   77     | expr . GE expr
+   78     | expr . GT expr
+   79     | expr . NE expr
+   81     | expr . AND expr
+   82     | expr . OR expr
+
+    OR   shift, and go to state 68
+    AND  shift, and go to state 69
+    LT   shift, and go to state 70
+    GT   shift, and go to state 71
+    LE   shift, and go to state 72
+    GE   shift, and go to state 73
+    EQ   shift, and go to state 74
+    NE   shift, and go to state 75
+    '-'  shift, and go to state 76
+    '+'  shift, and go to state 77
+    '*'  shift, and go to state 78
+    '/'  shift, and go to state 79
+
+    $default  reduce using rule 14 (val_dec)
+
+
+State 55
+
+   47 func_invo_stmt: identifier . LEFT_PARENTHESE func_invo_args RIGHT_PARENTHESE
+   86 expr: identifier .
+   90 array_id: identifier . LEFT_SQUARE expr RIGHT_SQUARE
+
+    LEFT_PARENTHESE  shift, and go to state 80
+    LEFT_SQUARE      shift, and go to state 81
+
+    $default  reduce using rule 86 (expr)
+
+
+State 56
+
+   84 expr: array_id .
+
+    $default  reduce using rule 84 (expr)
+
+
+State 57
+
+   83 expr: literals .
+
+    $default  reduce using rule 83 (expr)
+
+
+State 58
+
+   17 var_dec: VAR identifier COLON types .
+   19        | VAR identifier COLON types . ASSIGN expr
+   20 array_dec: VAR identifier COLON types . LEFT_SQUARE INT_LITERAL RIGHT_SQUARE
+
+    LEFT_SQUARE  shift, and go to state 82
+    ASSIGN       shift, and go to state 83
+
+    $default  reduce using rule 17 (var_dec)
+
+
+State 59
+
+   18 var_dec: VAR identifier ASSIGN expr .
+   70 expr: expr . '*' expr
+   71     | expr . '/' expr
+   72     | expr . '+' expr
+   73     | expr . '-' expr
+   74     | expr . LT expr
+   75     | expr . LE expr
+   76     | expr . EQ expr
+   77     | expr . GE expr
+   78     | expr . GT expr
+   79     | expr . NE expr
+   81     | expr . AND expr
+   82     | expr . OR expr
+
+    OR   shift, and go to state 68
+    AND  shift, and go to state 69
+    LT   shift, and go to state 70
+    GT   shift, and go to state 71
+    LE   shift, and go to state 72
+    GE   shift, and go to state 73
+    EQ   shift, and go to state 74
+    NE   shift, and go to state 75
+    '-'  shift, and go to state 76
+    '+'  shift, and go to state 77
+    '*'  shift, and go to state 78
+    '/'  shift, and go to state 79
+
+    $default  reduce using rule 18 (var_dec)
+
+
+State 60
+
+   22 func_def: DEF identifier $@2 LEFT_PARENTHESE . func_args RIGHT_PARENTHESE func_def_remain
+
+    COMMA  shift, and go to state 84
+    ID     shift, and go to state 5
+
+    $default  reduce using rule 26 (func_args)
+
+    func_args      go to state 85
+    func_arg_list  go to state 86
+    func_arg       go to state 87
+    identifier     go to state 88
+
+
+State 61
+
+   15 val_dec: VAL identifier COLON types ASSIGN . expr
+
+    LEFT_PARENTHESE  shift, and go to state 42
+    PRINT            shift, and go to state 43
+    PRINTLN          shift, and go to state 44
+    READ             shift, and go to state 45
+    ID               shift, and go to state 5
+    INT_LITERAL      shift, and go to state 46
+    REAL_LITERAL     shift, and go to state 47
+    STRING_LITERAL   shift, and go to state 48
+    '!'              shift, and go to state 49
+    '-'              shift, and go to state 50
+
+    print_stmt      go to state 51
+    read_stmt       go to state 52
+    func_invo_stmt  go to state 53
+    expr            go to state 89
+    identifier      go to state 55
+    array_id        go to state 56
+    literals        go to state 57
+
+
+State 62
+
+   68 expr: LEFT_PARENTHESE expr . RIGHT_PARENTHESE
+   70     | expr . '*' expr
+   71     | expr . '/' expr
+   72     | expr . '+' expr
+   73     | expr . '-' expr
+   74     | expr . LT expr
+   75     | expr . LE expr
+   76     | expr . EQ expr
+   77     | expr . GE expr
+   78     | expr . GT expr
+   79     | expr . NE expr
+   81     | expr . AND expr
+   82     | expr . OR expr
+
+    RIGHT_PARENTHESE  shift, and go to state 90
+    OR                shift, and go to state 68
+    AND               shift, and go to state 69
+    LT                shift, and go to state 70
+    GT                shift, and go to state 71
+    LE                shift, and go to state 72
+    GE                shift, and go to state 73
+    EQ                shift, and go to state 74
+    NE                shift, and go to state 75
+    '-'               shift, and go to state 76
+    '+'               shift, and go to state 77
+    '*'               shift, and go to state 78
+    '/'               shift, and go to state 79
+
+
+State 63
+
+   41 print_stmt: PRINT LEFT_PARENTHESE . expr RIGHT_PARENTHESE
+
+    LEFT_PARENTHESE  shift, and go to state 42
+    PRINT            shift, and go to state 43
+    PRINTLN          shift, and go to state 44
+    READ             shift, and go to state 45
+    ID               shift, and go to state 5
+    INT_LITERAL      shift, and go to state 46
+    REAL_LITERAL     shift, and go to state 47
+    STRING_LITERAL   shift, and go to state 48
+    '!'              shift, and go to state 49
+    '-'              shift, and go to state 50
+
+    print_stmt      go to state 51
+    read_stmt       go to state 52
+    func_invo_stmt  go to state 53
+    expr            go to state 91
+    identifier      go to state 55
+    array_id        go to state 56
+    literals        go to state 57
+
+
+State 64
+
+   42 print_stmt: PRINTLN LEFT_PARENTHESE . expr RIGHT_PARENTHESE
+
+    LEFT_PARENTHESE  shift, and go to state 42
+    PRINT            shift, and go to state 43
+    PRINTLN          shift, and go to state 44
+    READ             shift, and go to state 45
+    ID               shift, and go to state 5
+    INT_LITERAL      shift, and go to state 46
+    REAL_LITERAL     shift, and go to state 47
+    STRING_LITERAL   shift, and go to state 48
+    '!'              shift, and go to state 49
+    '-'              shift, and go to state 50
+
+    print_stmt      go to state 51
+    read_stmt       go to state 52
+    func_invo_stmt  go to state 53
+    expr            go to state 92
+    identifier      go to state 55
+    array_id        go to state 56
+    literals        go to state 57
+
+
+State 65
+
+   46 read_stmt: READ identifier .
+
+    $default  reduce using rule 46 (read_stmt)
+
+
+State 66
+
+   70 expr: expr . '*' expr
+   71     | expr . '/' expr
+   72     | expr . '+' expr
+   73     | expr . '-' expr
+   74     | expr . LT expr
+   75     | expr . LE expr
+   76     | expr . EQ expr
+   77     | expr . GE expr
+   78     | expr . GT expr
+   79     | expr . NE expr
+   80     | '!' expr .
+   81     | expr . AND expr
+   82     | expr . OR expr
+
+    LT   shift, and go to state 70
+    GT   shift, and go to state 71
+    LE   shift, and go to state 72
+    GE   shift, and go to state 73
+    EQ   shift, and go to state 74
+    NE   shift, and go to state 75
+    '-'  shift, and go to state 76
+    '+'  shift, and go to state 77
+    '*'  shift, and go to state 78
+    '/'  shift, and go to state 79
+
+    $default  reduce using rule 80 (expr)
+
+
+State 67
+
+   69 expr: '-' expr .
+   70     | expr . '*' expr
+   71     | expr . '/' expr
+   72     | expr . '+' expr
+   73     | expr . '-' expr
+   74     | expr . LT expr
+   75     | expr . LE expr
+   76     | expr . EQ expr
+   77     | expr . GE expr
+   78     | expr . GT expr
+   79     | expr . NE expr
+   81     | expr . AND expr
+   82     | expr . OR expr
+
+    $default  reduce using rule 69 (expr)
+
+
+State 68
+
+   82 expr: expr OR . expr
+
+    LEFT_PARENTHESE  shift, and go to state 42
+    PRINT            shift, and go to state 43
+    PRINTLN          shift, and go to state 44
+    READ             shift, and go to state 45
+    ID               shift, and go to state 5
+    INT_LITERAL      shift, and go to state 46
+    REAL_LITERAL     shift, and go to state 47
+    STRING_LITERAL   shift, and go to state 48
+    '!'              shift, and go to state 49
+    '-'              shift, and go to state 50
+
+    print_stmt      go to state 51
+    read_stmt       go to state 52
+    func_invo_stmt  go to state 53
+    expr            go to state 93
+    identifier      go to state 55
+    array_id        go to state 56
+    literals        go to state 57
+
+
+State 69
+
+   81 expr: expr AND . expr
+
+    LEFT_PARENTHESE  shift, and go to state 42
+    PRINT            shift, and go to state 43
+    PRINTLN          shift, and go to state 44
+    READ             shift, and go to state 45
+    ID               shift, and go to state 5
+    INT_LITERAL      shift, and go to state 46
+    REAL_LITERAL     shift, and go to state 47
+    STRING_LITERAL   shift, and go to state 48
+    '!'              shift, and go to state 49
+    '-'              shift, and go to state 50
+
+    print_stmt      go to state 51
+    read_stmt       go to state 52
+    func_invo_stmt  go to state 53
+    expr            go to state 94
+    identifier      go to state 55
+    array_id        go to state 56
+    literals        go to state 57
+
+
+State 70
+
+   74 expr: expr LT . expr
+
+    LEFT_PARENTHESE  shift, and go to state 42
+    PRINT            shift, and go to state 43
+    PRINTLN          shift, and go to state 44
+    READ             shift, and go to state 45
+    ID               shift, and go to state 5
+    INT_LITERAL      shift, and go to state 46
+    REAL_LITERAL     shift, and go to state 47
+    STRING_LITERAL   shift, and go to state 48
+    '!'              shift, and go to state 49
+    '-'              shift, and go to state 50
+
+    print_stmt      go to state 51
+    read_stmt       go to state 52
+    func_invo_stmt  go to state 53
+    expr            go to state 95
+    identifier      go to state 55
+    array_id        go to state 56
+    literals        go to state 57
+
+
+State 71
+
+   78 expr: expr GT . expr
+
+    LEFT_PARENTHESE  shift, and go to state 42
+    PRINT            shift, and go to state 43
+    PRINTLN          shift, and go to state 44
+    READ             shift, and go to state 45
+    ID               shift, and go to state 5
+    INT_LITERAL      shift, and go to state 46
+    REAL_LITERAL     shift, and go to state 47
+    STRING_LITERAL   shift, and go to state 48
+    '!'              shift, and go to state 49
+    '-'              shift, and go to state 50
+
+    print_stmt      go to state 51
+    read_stmt       go to state 52
+    func_invo_stmt  go to state 53
+    expr            go to state 96
+    identifier      go to state 55
+    array_id        go to state 56
+    literals        go to state 57
+
+
+State 72
+
+   75 expr: expr LE . expr
+
+    LEFT_PARENTHESE  shift, and go to state 42
+    PRINT            shift, and go to state 43
+    PRINTLN          shift, and go to state 44
+    READ             shift, and go to state 45
+    ID               shift, and go to state 5
+    INT_LITERAL      shift, and go to state 46
+    REAL_LITERAL     shift, and go to state 47
+    STRING_LITERAL   shift, and go to state 48
+    '!'              shift, and go to state 49
+    '-'              shift, and go to state 50
+
+    print_stmt      go to state 51
+    read_stmt       go to state 52
+    func_invo_stmt  go to state 53
+    expr            go to state 97
+    identifier      go to state 55
+    array_id        go to state 56
+    literals        go to state 57
+
+
+State 73
+
+   77 expr: expr GE . expr
+
+    LEFT_PARENTHESE  shift, and go to state 42
+    PRINT            shift, and go to state 43
+    PRINTLN          shift, and go to state 44
+    READ             shift, and go to state 45
+    ID               shift, and go to state 5
+    INT_LITERAL      shift, and go to state 46
+    REAL_LITERAL     shift, and go to state 47
+    STRING_LITERAL   shift, and go to state 48
+    '!'              shift, and go to state 49
+    '-'              shift, and go to state 50
+
+    print_stmt      go to state 51
+    read_stmt       go to state 52
+    func_invo_stmt  go to state 53
+    expr            go to state 98
+    identifier      go to state 55
+    array_id        go to state 56
+    literals        go to state 57
+
+
+State 74
+
+   76 expr: expr EQ . expr
+
+    LEFT_PARENTHESE  shift, and go to state 42
+    PRINT            shift, and go to state 43
+    PRINTLN          shift, and go to state 44
+    READ             shift, and go to state 45
+    ID               shift, and go to state 5
+    INT_LITERAL      shift, and go to state 46
+    REAL_LITERAL     shift, and go to state 47
+    STRING_LITERAL   shift, and go to state 48
+    '!'              shift, and go to state 49
+    '-'              shift, and go to state 50
+
+    print_stmt      go to state 51
+    read_stmt       go to state 52
+    func_invo_stmt  go to state 53
+    expr            go to state 99
+    identifier      go to state 55
+    array_id        go to state 56
+    literals        go to state 57
+
+
+State 75
+
+   79 expr: expr NE . expr
+
+    LEFT_PARENTHESE  shift, and go to state 42
+    PRINT            shift, and go to state 43
+    PRINTLN          shift, and go to state 44
+    READ             shift, and go to state 45
+    ID               shift, and go to state 5
+    INT_LITERAL      shift, and go to state 46
+    REAL_LITERAL     shift, and go to state 47
+    STRING_LITERAL   shift, and go to state 48
+    '!'              shift, and go to state 49
+    '-'              shift, and go to state 50
+
+    print_stmt      go to state 51
+    read_stmt       go to state 52
+    func_invo_stmt  go to state 53
+    expr            go to state 100
+    identifier      go to state 55
+    array_id        go to state 56
+    literals        go to state 57
+
+
+State 76
+
+   73 expr: expr '-' . expr
+
+    LEFT_PARENTHESE  shift, and go to state 42
+    PRINT            shift, and go to state 43
+    PRINTLN          shift, and go to state 44
+    READ             shift, and go to state 45
+    ID               shift, and go to state 5
+    INT_LITERAL      shift, and go to state 46
+    REAL_LITERAL     shift, and go to state 47
+    STRING_LITERAL   shift, and go to state 48
+    '!'              shift, and go to state 49
+    '-'              shift, and go to state 50
+
+    print_stmt      go to state 51
+    read_stmt       go to state 52
+    func_invo_stmt  go to state 53
+    expr            go to state 101
+    identifier      go to state 55
+    array_id        go to state 56
+    literals        go to state 57
+
+
+State 77
+
+   72 expr: expr '+' . expr
+
+    LEFT_PARENTHESE  shift, and go to state 42
+    PRINT            shift, and go to state 43
+    PRINTLN          shift, and go to state 44
+    READ             shift, and go to state 45
+    ID               shift, and go to state 5
+    INT_LITERAL      shift, and go to state 46
+    REAL_LITERAL     shift, and go to state 47
+    STRING_LITERAL   shift, and go to state 48
+    '!'              shift, and go to state 49
+    '-'              shift, and go to state 50
+
+    print_stmt      go to state 51
+    read_stmt       go to state 52
+    func_invo_stmt  go to state 53
+    expr            go to state 102
+    identifier      go to state 55
+    array_id        go to state 56
+    literals        go to state 57
+
+
+State 78
+
+   70 expr: expr '*' . expr
+
+    LEFT_PARENTHESE  shift, and go to state 42
+    PRINT            shift, and go to state 43
+    PRINTLN          shift, and go to state 44
+    READ             shift, and go to state 45
+    ID               shift, and go to state 5
+    INT_LITERAL      shift, and go to state 46
+    REAL_LITERAL     shift, and go to state 47
+    STRING_LITERAL   shift, and go to state 48
+    '!'              shift, and go to state 49
+    '-'              shift, and go to state 50
+
+    print_stmt      go to state 51
+    read_stmt       go to state 52
+    func_invo_stmt  go to state 53
+    expr            go to state 103
+    identifier      go to state 55
+    array_id        go to state 56
+    literals        go to state 57
+
+
+State 79
+
+   71 expr: expr '/' . expr
+
+    LEFT_PARENTHESE  shift, and go to state 42
+    PRINT            shift, and go to state 43
+    PRINTLN          shift, and go to state 44
+    READ             shift, and go to state 45
+    ID               shift, and go to state 5
+    INT_LITERAL      shift, and go to state 46
+    REAL_LITERAL     shift, and go to state 47
+    STRING_LITERAL   shift, and go to state 48
+    '!'              shift, and go to state 49
+    '-'              shift, and go to state 50
+
+    print_stmt      go to state 51
+    read_stmt       go to state 52
+    func_invo_stmt  go to state 53
+    expr            go to state 104
+    identifier      go to state 55
+    array_id        go to state 56
+    literals        go to state 57
+
+
+State 80
+
+   47 func_invo_stmt: identifier LEFT_PARENTHESE . func_invo_args RIGHT_PARENTHESE
+
+    LEFT_PARENTHESE  shift, and go to state 42
+    PRINT            shift, and go to state 43
+    PRINTLN          shift, and go to state 44
+    READ             shift, and go to state 45
+    ID               shift, and go to state 5
+    INT_LITERAL      shift, and go to state 46
+    REAL_LITERAL     shift, and go to state 47
+    STRING_LITERAL   shift, and go to state 48
+    '!'              shift, and go to state 49
+    '-'              shift, and go to state 50
+
+    print_stmt      go to state 51
+    read_stmt       go to state 52
+    func_invo_stmt  go to state 53
+    func_invo_args  go to state 105
+    func_invo_arg   go to state 106
+    expr            go to state 107
+    identifier      go to state 55
+    array_id        go to state 56
+    literals        go to state 57
+
+
+State 81
+
+   90 array_id: identifier LEFT_SQUARE . expr RIGHT_SQUARE
+
+    LEFT_PARENTHESE  shift, and go to state 42
+    PRINT            shift, and go to state 43
+    PRINTLN          shift, and go to state 44
+    READ             shift, and go to state 45
+    ID               shift, and go to state 5
+    INT_LITERAL      shift, and go to state 46
+    REAL_LITERAL     shift, and go to state 47
+    STRING_LITERAL   shift, and go to state 48
+    '!'              shift, and go to state 49
+    '-'              shift, and go to state 50
+
+    print_stmt      go to state 51
+    read_stmt       go to state 52
+    func_invo_stmt  go to state 53
+    expr            go to state 108
+    identifier      go to state 55
+    array_id        go to state 56
+    literals        go to state 57
+
+
+State 82
+
+   20 array_dec: VAR identifier COLON types LEFT_SQUARE . INT_LITERAL RIGHT_SQUARE
+
+    INT_LITERAL  shift, and go to state 109
+
+
+State 83
+
+   19 var_dec: VAR identifier COLON types ASSIGN . expr
+
+    LEFT_PARENTHESE  shift, and go to state 42
+    PRINT            shift, and go to state 43
+    PRINTLN          shift, and go to state 44
+    READ             shift, and go to state 45
+    ID               shift, and go to state 5
+    INT_LITERAL      shift, and go to state 46
+    REAL_LITERAL     shift, and go to state 47
+    STRING_LITERAL   shift, and go to state 48
+    '!'              shift, and go to state 49
+    '-'              shift, and go to state 50
+
+    print_stmt      go to state 51
+    read_stmt       go to state 52
+    func_invo_stmt  go to state 53
+    expr            go to state 110
+    identifier      go to state 55
+    array_id        go to state 56
+    literals        go to state 57
+
+
+State 84
+
+   30 func_arg: COMMA . identifier COLON types
+
+    ID  shift, and go to state 5
+
+    identifier  go to state 111
+
+
+State 85
+
+   22 func_def: DEF identifier $@2 LEFT_PARENTHESE func_args . RIGHT_PARENTHESE func_def_remain
+
+    RIGHT_PARENTHESE  shift, and go to state 112
+
+
+State 86
+
+   25 func_args: func_arg_list .
+   28 func_arg_list: func_arg_list . func_arg
+
+    COMMA  shift, and go to state 84
+    ID     shift, and go to state 5
+
+    $default  reduce using rule 25 (func_args)
+
+    func_arg    go to state 113
+    identifier  go to state 88
+
+
+State 87
+
+   27 func_arg_list: func_arg .
+
+    $default  reduce using rule 27 (func_arg_list)
+
+
+State 88
+
+   29 func_arg: identifier . COLON types
+
+    COLON  shift, and go to state 114
+
+
+State 89
+
+   15 val_dec: VAL identifier COLON types ASSIGN expr .
+   70 expr: expr . '*' expr
+   71     | expr . '/' expr
+   72     | expr . '+' expr
+   73     | expr . '-' expr
+   74     | expr . LT expr
+   75     | expr . LE expr
+   76     | expr . EQ expr
+   77     | expr . GE expr
+   78     | expr . GT expr
+   79     | expr . NE expr
+   81     | expr . AND expr
+   82     | expr . OR expr
+
+    OR   shift, and go to state 68
+    AND  shift, and go to state 69
+    LT   shift, and go to state 70
+    GT   shift, and go to state 71
+    LE   shift, and go to state 72
+    GE   shift, and go to state 73
+    EQ   shift, and go to state 74
+    NE   shift, and go to state 75
+    '-'  shift, and go to state 76
+    '+'  shift, and go to state 77
+    '*'  shift, and go to state 78
+    '/'  shift, and go to state 79
+
+    $default  reduce using rule 15 (val_dec)
+
+
+State 90
+
+   68 expr: LEFT_PARENTHESE expr RIGHT_PARENTHESE .
+
+    $default  reduce using rule 68 (expr)
+
+
+State 91
+
+   41 print_stmt: PRINT LEFT_PARENTHESE expr . RIGHT_PARENTHESE
+   70 expr: expr . '*' expr
+   71     | expr . '/' expr
+   72     | expr . '+' expr
+   73     | expr . '-' expr
+   74     | expr . LT expr
+   75     | expr . LE expr
+   76     | expr . EQ expr
+   77     | expr . GE expr
+   78     | expr . GT expr
+   79     | expr . NE expr
+   81     | expr . AND expr
+   82     | expr . OR expr
+
+    RIGHT_PARENTHESE  shift, and go to state 115
+    OR                shift, and go to state 68
+    AND               shift, and go to state 69
+    LT                shift, and go to state 70
+    GT                shift, and go to state 71
+    LE                shift, and go to state 72
+    GE                shift, and go to state 73
+    EQ                shift, and go to state 74
+    NE                shift, and go to state 75
+    '-'               shift, and go to state 76
+    '+'               shift, and go to state 77
+    '*'               shift, and go to state 78
+    '/'               shift, and go to state 79
+
+
+State 92
+
+   42 print_stmt: PRINTLN LEFT_PARENTHESE expr . RIGHT_PARENTHESE
+   70 expr: expr . '*' expr
+   71     | expr . '/' expr
+   72     | expr . '+' expr
+   73     | expr . '-' expr
+   74     | expr . LT expr
+   75     | expr . LE expr
+   76     | expr . EQ expr
+   77     | expr . GE expr
+   78     | expr . GT expr
+   79     | expr . NE expr
+   81     | expr . AND expr
+   82     | expr . OR expr
+
+    RIGHT_PARENTHESE  shift, and go to state 116
+    OR                shift, and go to state 68
+    AND               shift, and go to state 69
+    LT                shift, and go to state 70
+    GT                shift, and go to state 71
+    LE                shift, and go to state 72
+    GE                shift, and go to state 73
+    EQ                shift, and go to state 74
+    NE                shift, and go to state 75
+    '-'               shift, and go to state 76
+    '+'               shift, and go to state 77
+    '*'               shift, and go to state 78
+    '/'               shift, and go to state 79
+
+
+State 93
+
+   70 expr: expr . '*' expr
+   71     | expr . '/' expr
+   72     | expr . '+' expr
+   73     | expr . '-' expr
+   74     | expr . LT expr
+   75     | expr . LE expr
+   76     | expr . EQ expr
+   77     | expr . GE expr
+   78     | expr . GT expr
+   79     | expr . NE expr
+   81     | expr . AND expr
+   82     | expr . OR expr
+   82     | expr OR expr .
+
+    AND  shift, and go to state 69
+    LT   shift, and go to state 70
+    GT   shift, and go to state 71
+    LE   shift, and go to state 72
+    GE   shift, and go to state 73
+    EQ   shift, and go to state 74
+    NE   shift, and go to state 75
+    '-'  shift, and go to state 76
+    '+'  shift, and go to state 77
+    '*'  shift, and go to state 78
+    '/'  shift, and go to state 79
+
+    $default  reduce using rule 82 (expr)
+
+
+State 94
+
+   70 expr: expr . '*' expr
+   71     | expr . '/' expr
+   72     | expr . '+' expr
+   73     | expr . '-' expr
+   74     | expr . LT expr
+   75     | expr . LE expr
+   76     | expr . EQ expr
+   77     | expr . GE expr
+   78     | expr . GT expr
+   79     | expr . NE expr
+   81     | expr . AND expr
+   81     | expr AND expr .
+   82     | expr . OR expr
+
+    LT   shift, and go to state 70
+    GT   shift, and go to state 71
+    LE   shift, and go to state 72
+    GE   shift, and go to state 73
+    EQ   shift, and go to state 74
+    NE   shift, and go to state 75
+    '-'  shift, and go to state 76
+    '+'  shift, and go to state 77
+    '*'  shift, and go to state 78
+    '/'  shift, and go to state 79
+
+    $default  reduce using rule 81 (expr)
+
+
+State 95
+
+   70 expr: expr . '*' expr
+   71     | expr . '/' expr
+   72     | expr . '+' expr
+   73     | expr . '-' expr
+   74     | expr . LT expr
+   74     | expr LT expr .
+   75     | expr . LE expr
+   76     | expr . EQ expr
+   77     | expr . GE expr
+   78     | expr . GT expr
+   79     | expr . NE expr
+   81     | expr . AND expr
+   82     | expr . OR expr
+
+    '-'  shift, and go to state 76
+    '+'  shift, and go to state 77
+    '*'  shift, and go to state 78
+    '/'  shift, and go to state 79
+
+    $default  reduce using rule 74 (expr)
+
+
+State 96
+
+   70 expr: expr . '*' expr
+   71     | expr . '/' expr
+   72     | expr . '+' expr
+   73     | expr . '-' expr
+   74     | expr . LT expr
+   75     | expr . LE expr
+   76     | expr . EQ expr
+   77     | expr . GE expr
+   78     | expr . GT expr
+   78     | expr GT expr .
+   79     | expr . NE expr
+   81     | expr . AND expr
+   82     | expr . OR expr
+
+    '-'  shift, and go to state 76
+    '+'  shift, and go to state 77
+    '*'  shift, and go to state 78
+    '/'  shift, and go to state 79
+
+    $default  reduce using rule 78 (expr)
+
+
+State 97
+
+   70 expr: expr . '*' expr
+   71     | expr . '/' expr
+   72     | expr . '+' expr
+   73     | expr . '-' expr
+   74     | expr . LT expr
+   75     | expr . LE expr
+   75     | expr LE expr .
+   76     | expr . EQ expr
+   77     | expr . GE expr
+   78     | expr . GT expr
+   79     | expr . NE expr
+   81     | expr . AND expr
+   82     | expr . OR expr
+
+    '-'  shift, and go to state 76
+    '+'  shift, and go to state 77
+    '*'  shift, and go to state 78
+    '/'  shift, and go to state 79
+
+    $default  reduce using rule 75 (expr)
+
+
+State 98
+
+   70 expr: expr . '*' expr
+   71     | expr . '/' expr
+   72     | expr . '+' expr
+   73     | expr . '-' expr
+   74     | expr . LT expr
+   75     | expr . LE expr
+   76     | expr . EQ expr
+   77     | expr . GE expr
+   77     | expr GE expr .
+   78     | expr . GT expr
+   79     | expr . NE expr
+   81     | expr . AND expr
+   82     | expr . OR expr
+
+    '-'  shift, and go to state 76
+    '+'  shift, and go to state 77
+    '*'  shift, and go to state 78
+    '/'  shift, and go to state 79
+
+    $default  reduce using rule 77 (expr)
+
+
+State 99
+
+   70 expr: expr . '*' expr
+   71     | expr . '/' expr
+   72     | expr . '+' expr
+   73     | expr . '-' expr
+   74     | expr . LT expr
+   75     | expr . LE expr
+   76     | expr . EQ expr
+   76     | expr EQ expr .
+   77     | expr . GE expr
+   78     | expr . GT expr
+   79     | expr . NE expr
+   81     | expr . AND expr
+   82     | expr . OR expr
+
+    '-'  shift, and go to state 76
+    '+'  shift, and go to state 77
+    '*'  shift, and go to state 78
+    '/'  shift, and go to state 79
+
+    $default  reduce using rule 76 (expr)
+
+
+State 100
+
+   70 expr: expr . '*' expr
+   71     | expr . '/' expr
+   72     | expr . '+' expr
+   73     | expr . '-' expr
+   74     | expr . LT expr
+   75     | expr . LE expr
+   76     | expr . EQ expr
+   77     | expr . GE expr
+   78     | expr . GT expr
+   79     | expr . NE expr
+   79     | expr NE expr .
+   81     | expr . AND expr
+   82     | expr . OR expr
+
+    '-'  shift, and go to state 76
+    '+'  shift, and go to state 77
+    '*'  shift, and go to state 78
+    '/'  shift, and go to state 79
+
+    $default  reduce using rule 79 (expr)
+
+
+State 101
+
+   70 expr: expr . '*' expr
+   71     | expr . '/' expr
+   72     | expr . '+' expr
+   73     | expr . '-' expr
+   73     | expr '-' expr .
+   74     | expr . LT expr
+   75     | expr . LE expr
+   76     | expr . EQ expr
+   77     | expr . GE expr
+   78     | expr . GT expr
+   79     | expr . NE expr
+   81     | expr . AND expr
+   82     | expr . OR expr
+
+    '*'  shift, and go to state 78
+    '/'  shift, and go to state 79
+
+    $default  reduce using rule 73 (expr)
+
+
+State 102
+
+   70 expr: expr . '*' expr
+   71     | expr . '/' expr
+   72     | expr . '+' expr
+   72     | expr '+' expr .
+   73     | expr . '-' expr
+   74     | expr . LT expr
+   75     | expr . LE expr
+   76     | expr . EQ expr
+   77     | expr . GE expr
+   78     | expr . GT expr
+   79     | expr . NE expr
+   81     | expr . AND expr
+   82     | expr . OR expr
+
+    '*'  shift, and go to state 78
+    '/'  shift, and go to state 79
+
+    $default  reduce using rule 72 (expr)
+
+
+State 103
+
+   70 expr: expr . '*' expr
+   70     | expr '*' expr .
+   71     | expr . '/' expr
+   72     | expr . '+' expr
+   73     | expr . '-' expr
+   74     | expr . LT expr
+   75     | expr . LE expr
+   76     | expr . EQ expr
+   77     | expr . GE expr
+   78     | expr . GT expr
+   79     | expr . NE expr
+   81     | expr . AND expr
+   82     | expr . OR expr
+
+    $default  reduce using rule 70 (expr)
+
+
+State 104
+
+   70 expr: expr . '*' expr
+   71     | expr . '/' expr
+   71     | expr '/' expr .
+   72     | expr . '+' expr
+   73     | expr . '-' expr
+   74     | expr . LT expr
+   75     | expr . LE expr
+   76     | expr . EQ expr
+   77     | expr . GE expr
+   78     | expr . GT expr
+   79     | expr . NE expr
+   81     | expr . AND expr
+   82     | expr . OR expr
+
+    $default  reduce using rule 71 (expr)
+
+
+State 105
+
+   47 func_invo_stmt: identifier LEFT_PARENTHESE func_invo_args . RIGHT_PARENTHESE
+   49 func_invo_args: func_invo_args . COMMA func_invo_arg
+
+    COMMA             shift, and go to state 117
+    RIGHT_PARENTHESE  shift, and go to state 118
+
+
+State 106
+
+   48 func_invo_args: func_invo_arg .
+
+    $default  reduce using rule 48 (func_invo_args)
+
+
+State 107
+
+   50 func_invo_arg: expr .
+   70 expr: expr . '*' expr
+   71     | expr . '/' expr
+   72     | expr . '+' expr
+   73     | expr . '-' expr
+   74     | expr . LT expr
+   75     | expr . LE expr
+   76     | expr . EQ expr
+   77     | expr . GE expr
+   78     | expr . GT expr
+   79     | expr . NE expr
+   81     | expr . AND expr
+   82     | expr . OR expr
+
+    OR   shift, and go to state 68
+    AND  shift, and go to state 69
+    LT   shift, and go to state 70
+    GT   shift, and go to state 71
+    LE   shift, and go to state 72
+    GE   shift, and go to state 73
+    EQ   shift, and go to state 74
+    NE   shift, and go to state 75
+    '-'  shift, and go to state 76
+    '+'  shift, and go to state 77
+    '*'  shift, and go to state 78
+    '/'  shift, and go to state 79
+
+    $default  reduce using rule 50 (func_invo_arg)
+
+
+State 108
+
+   70 expr: expr . '*' expr
+   71     | expr . '/' expr
+   72     | expr . '+' expr
+   73     | expr . '-' expr
+   74     | expr . LT expr
+   75     | expr . LE expr
+   76     | expr . EQ expr
+   77     | expr . GE expr
+   78     | expr . GT expr
+   79     | expr . NE expr
+   81     | expr . AND expr
+   82     | expr . OR expr
+   90 array_id: identifier LEFT_SQUARE expr . RIGHT_SQUARE
+
+    RIGHT_SQUARE  shift, and go to state 119
+    OR            shift, and go to state 68
+    AND           shift, and go to state 69
+    LT            shift, and go to state 70
+    GT            shift, and go to state 71
+    LE            shift, and go to state 72
+    GE            shift, and go to state 73
+    EQ            shift, and go to state 74
+    NE            shift, and go to state 75
+    '-'           shift, and go to state 76
+    '+'           shift, and go to state 77
+    '*'           shift, and go to state 78
+    '/'           shift, and go to state 79
+
+
+State 109
+
+   20 array_dec: VAR identifier COLON types LEFT_SQUARE INT_LITERAL . RIGHT_SQUARE
+
+    RIGHT_SQUARE  shift, and go to state 120
+
+
+State 110
+
+   19 var_dec: VAR identifier COLON types ASSIGN expr .
+   70 expr: expr . '*' expr
+   71     | expr . '/' expr
+   72     | expr . '+' expr
+   73     | expr . '-' expr
+   74     | expr . LT expr
+   75     | expr . LE expr
+   76     | expr . EQ expr
+   77     | expr . GE expr
+   78     | expr . GT expr
+   79     | expr . NE expr
+   81     | expr . AND expr
+   82     | expr . OR expr
+
+    OR   shift, and go to state 68
+    AND  shift, and go to state 69
+    LT   shift, and go to state 70
+    GT   shift, and go to state 71
+    LE   shift, and go to state 72
+    GE   shift, and go to state 73
+    EQ   shift, and go to state 74
+    NE   shift, and go to state 75
+    '-'  shift, and go to state 76
+    '+'  shift, and go to state 77
+    '*'  shift, and go to state 78
+    '/'  shift, and go to state 79
+
+    $default  reduce using rule 19 (var_dec)
+
+
+State 111
+
+   30 func_arg: COMMA identifier . COLON types
+
+    COLON  shift, and go to state 121
+
+
+State 112
+
+   22 func_def: DEF identifier $@2 LEFT_PARENTHESE func_args RIGHT_PARENTHESE . func_def_remain
+
+    COLON       shift, and go to state 122
+    LEFT_CURLY  shift, and go to state 123
+
+    func_def_remain  go to state 124
+
+
+State 113
+
+   28 func_arg_list: func_arg_list func_arg .
+
+    $default  reduce using rule 28 (func_arg_list)
+
+
+State 114
+
+   29 func_arg: identifier COLON . types
+
+    CHAR     shift, and go to state 35
+    INT      shift, and go to state 36
+    FLOAT    shift, and go to state 37
+    STRING   shift, and go to state 38
+    BOOLEAN  shift, and go to state 39
+    VOID     shift, and go to state 40
+
+    types  go to state 125
+
+
+State 115
+
+   41 print_stmt: PRINT LEFT_PARENTHESE expr RIGHT_PARENTHESE .
+
+    $default  reduce using rule 41 (print_stmt)
+
+
+State 116
+
+   42 print_stmt: PRINTLN LEFT_PARENTHESE expr RIGHT_PARENTHESE .
+
+    $default  reduce using rule 42 (print_stmt)
+
+
+State 117
+
+   49 func_invo_args: func_invo_args COMMA . func_invo_arg
+
+    LEFT_PARENTHESE  shift, and go to state 42
+    PRINT            shift, and go to state 43
+    PRINTLN          shift, and go to state 44
+    READ             shift, and go to state 45
+    ID               shift, and go to state 5
+    INT_LITERAL      shift, and go to state 46
+    REAL_LITERAL     shift, and go to state 47
+    STRING_LITERAL   shift, and go to state 48
+    '!'              shift, and go to state 49
+    '-'              shift, and go to state 50
+
+    print_stmt      go to state 51
+    read_stmt       go to state 52
+    func_invo_stmt  go to state 53
+    func_invo_arg   go to state 126
+    expr            go to state 107
+    identifier      go to state 55
+    array_id        go to state 56
+    literals        go to state 57
+
+
+State 118
+
+   47 func_invo_stmt: identifier LEFT_PARENTHESE func_invo_args RIGHT_PARENTHESE .
+
+    $default  reduce using rule 47 (func_invo_stmt)
+
+
+State 119
+
+   90 array_id: identifier LEFT_SQUARE expr RIGHT_SQUARE .
+
+    $default  reduce using rule 90 (array_id)
+
+
+State 120
+
+   20 array_dec: VAR identifier COLON types LEFT_SQUARE INT_LITERAL RIGHT_SQUARE .
+
+    $default  reduce using rule 20 (array_dec)
+
+
+State 121
+
+   30 func_arg: COMMA identifier COLON . types
+
+    CHAR     shift, and go to state 35
+    INT      shift, and go to state 36
+    FLOAT    shift, and go to state 37
+    STRING   shift, and go to state 38
+    BOOLEAN  shift, and go to state 39
+    VOID     shift, and go to state 40
+
+    types  go to state 127
+
+
+State 122
+
+   24 func_def_remain: COLON . types LEFT_CURLY block_body RIGHT_CURLY
+
+    CHAR     shift, and go to state 35
+    INT      shift, and go to state 36
+    FLOAT    shift, and go to state 37
+    STRING   shift, and go to state 38
+    BOOLEAN  shift, and go to state 39
+    VOID     shift, and go to state 40
+
+    types  go to state 128
+
+
+State 123
+
+   23 func_def_remain: LEFT_CURLY . block_body RIGHT_CURLY
+
+    FOR      shift, and go to state 129
+    WHILE    shift, and go to state 130
+    VAL      shift, and go to state 8
+    VAR      shift, and go to state 131
+    PRINT    shift, and go to state 43
+    PRINTLN  shift, and go to state 44
+    READ     shift, and go to state 45
+    IF       shift, and go to state 132
+    RETURN   shift, and go to state 133
+    ID       shift, and go to state 5
+
+    val_dec         go to state 134
+    var_dec         go to state 135
+    stmt            go to state 136
+    assign_stmt     go to state 137
+    print_stmt      go to state 138
+    return_stmt     go to state 139
+    read_stmt       go to state 140
+    func_invo_stmt  go to state 141
+    if_cond         go to state 142
+    while_loop      go to state 143
+    for_loop        go to state 144
+    block_body      go to state 145
+    identifier      go to state 146
+    array_id        go to state 147
+
+
+State 124
+
+   22 func_def: DEF identifier $@2 LEFT_PARENTHESE func_args RIGHT_PARENTHESE func_def_remain .
+
+    $default  reduce using rule 22 (func_def)
+
+
+State 125
+
+   29 func_arg: identifier COLON types .
+
+    $default  reduce using rule 29 (func_arg)
+
+
+State 126
+
+   49 func_invo_args: func_invo_args COMMA func_invo_arg .
+
+    $default  reduce using rule 49 (func_invo_args)
+
+
+State 127
+
+   30 func_arg: COMMA identifier COLON types .
+
+    $default  reduce using rule 30 (func_arg)
+
+
+State 128
+
+   24 func_def_remain: COLON types . LEFT_CURLY block_body RIGHT_CURLY
+
+    LEFT_CURLY  shift, and go to state 148
+
+
+State 129
+
+   58 for_loop: FOR . LEFT_PARENTHESE identifier FOR_ASSIGN INT_LITERAL TO INT_LITERAL RIGHT_PARENTHESE loop_body
+
+    LEFT_PARENTHESE  shift, and go to state 149
+
+
+State 130
+
+   55 while_loop: WHILE . LEFT_PARENTHESE expr RIGHT_PARENTHESE while_body
+
+    LEFT_PARENTHESE  shift, and go to state 150
+
+
+State 131
+
+   16 var_dec: VAR . identifier
+   17        | VAR . identifier COLON types
+   18        | VAR . identifier ASSIGN expr
+   19        | VAR . identifier COLON types ASSIGN expr
+
+    ID  shift, and go to state 5
+
+    identifier  go to state 151
+
+
+State 132
+
+   51 if_cond: IF . LEFT_PARENTHESE expr RIGHT_PARENTHESE cond_body
+   52        | IF . LEFT_PARENTHESE expr RIGHT_PARENTHESE cond_body ELSE cond_body
+
+    LEFT_PARENTHESE  shift, and go to state 152
+
+
+State 133
+
+   43 return_stmt: RETURN . return_body
+
+    LEFT_PARENTHESE  shift, and go to state 42
+    PRINT            shift, and go to state 43
+    PRINTLN          shift, and go to state 44
+    READ             shift, and go to state 45
+    ID               shift, and go to state 5
+    INT_LITERAL      shift, and go to state 46
+    REAL_LITERAL     shift, and go to state 47
+    STRING_LITERAL   shift, and go to state 48
+    '!'              shift, and go to state 49
+    '-'              shift, and go to state 50
+
+    PRINT     [reduce using rule 45 (return_body)]
+    PRINTLN   [reduce using rule 45 (return_body)]
+    READ      [reduce using rule 45 (return_body)]
+    ID        [reduce using rule 45 (return_body)]
+    $default  reduce using rule 45 (return_body)
+
+    print_stmt      go to state 51
+    return_body     go to state 153
+    read_stmt       go to state 52
+    func_invo_stmt  go to state 53
+    expr            go to state 154
+    identifier      go to state 55
+    array_id        go to state 56
+    literals        go to state 57
+
+
+State 134
+
+   62 block_body: val_dec .
+
+    $default  reduce using rule 62 (block_body)
+
+
+State 135
+
+   64 block_body: var_dec .
+
+    $default  reduce using rule 64 (block_body)
+
+
+State 136
+
+   66 block_body: stmt .
+
+    $default  reduce using rule 66 (block_body)
+
+
+State 137
+
+   31 stmt: assign_stmt .
+
+    $default  reduce using rule 31 (stmt)
+
+
+State 138
+
+   32 stmt: print_stmt .
+
+    $default  reduce using rule 32 (stmt)
+
+
+State 139
+
+   33 stmt: return_stmt .
+
+    $default  reduce using rule 33 (stmt)
+
+
+State 140
+
+   34 stmt: read_stmt .
+
+    $default  reduce using rule 34 (stmt)
+
+
+State 141
+
+   35 stmt: func_invo_stmt .
+
+    $default  reduce using rule 35 (stmt)
+
+
+State 142
+
+   36 stmt: if_cond .
+
+    $default  reduce using rule 36 (stmt)
+
+
+State 143
+
+   37 stmt: while_loop .
+
+    $default  reduce using rule 37 (stmt)
+
+
+State 144
+
+   38 stmt: for_loop .
+
+    $default  reduce using rule 38 (stmt)
+
+
+State 145
+
+   23 func_def_remain: LEFT_CURLY block_body . RIGHT_CURLY
+   63 block_body: block_body . val_dec
+   65           | block_body . var_dec
+   67           | block_body . stmt
+
+    RIGHT_CURLY  shift, and go to state 155
+    FOR          shift, and go to state 129
+    WHILE        shift, and go to state 130
+    VAL          shift, and go to state 8
+    VAR          shift, and go to state 131
+    PRINT        shift, and go to state 43
+    PRINTLN      shift, and go to state 44
+    READ         shift, and go to state 45
+    IF           shift, and go to state 132
+    RETURN       shift, and go to state 133
+    ID           shift, and go to state 5
+
+    val_dec         go to state 156
+    var_dec         go to state 157
+    stmt            go to state 158
+    assign_stmt     go to state 137
+    print_stmt      go to state 138
+    return_stmt     go to state 139
+    read_stmt       go to state 140
+    func_invo_stmt  go to state 141
+    if_cond         go to state 142
+    while_loop      go to state 143
+    for_loop        go to state 144
+    identifier      go to state 146
+    array_id        go to state 147
+
+
+State 146
+
+   39 assign_stmt: identifier . ASSIGN expr
+   47 func_invo_stmt: identifier . LEFT_PARENTHESE func_invo_args RIGHT_PARENTHESE
+   90 array_id: identifier . LEFT_SQUARE expr RIGHT_SQUARE
+
+    LEFT_PARENTHESE  shift, and go to state 80
+    LEFT_SQUARE      shift, and go to state 81
+    ASSIGN           shift, and go to state 159
+
+
+State 147
+
+   40 assign_stmt: array_id . ASSIGN expr
+
+    ASSIGN  shift, and go to state 160
+
+
+State 148
+
+   24 func_def_remain: COLON types LEFT_CURLY . block_body RIGHT_CURLY
+
+    FOR      shift, and go to state 129
+    WHILE    shift, and go to state 130
+    VAL      shift, and go to state 8
+    VAR      shift, and go to state 131
+    PRINT    shift, and go to state 43
+    PRINTLN  shift, and go to state 44
+    READ     shift, and go to state 45
+    IF       shift, and go to state 132
+    RETURN   shift, and go to state 133
+    ID       shift, and go to state 5
+
+    val_dec         go to state 134
+    var_dec         go to state 135
+    stmt            go to state 136
+    assign_stmt     go to state 137
+    print_stmt      go to state 138
+    return_stmt     go to state 139
+    read_stmt       go to state 140
+    func_invo_stmt  go to state 141
+    if_cond         go to state 142
+    while_loop      go to state 143
+    for_loop        go to state 144
+    block_body      go to state 161
+    identifier      go to state 146
+    array_id        go to state 147
+
+
+State 149
+
+   58 for_loop: FOR LEFT_PARENTHESE . identifier FOR_ASSIGN INT_LITERAL TO INT_LITERAL RIGHT_PARENTHESE loop_body
+
+    ID  shift, and go to state 5
+
+    identifier  go to state 162
+
+
+State 150
+
+   55 while_loop: WHILE LEFT_PARENTHESE . expr RIGHT_PARENTHESE while_body
+
+    LEFT_PARENTHESE  shift, and go to state 42
+    PRINT            shift, and go to state 43
+    PRINTLN          shift, and go to state 44
+    READ             shift, and go to state 45
+    ID               shift, and go to state 5
+    INT_LITERAL      shift, and go to state 46
+    REAL_LITERAL     shift, and go to state 47
+    STRING_LITERAL   shift, and go to state 48
+    '!'              shift, and go to state 49
+    '-'              shift, and go to state 50
+
+    print_stmt      go to state 51
+    read_stmt       go to state 52
+    func_invo_stmt  go to state 53
+    expr            go to state 163
+    identifier      go to state 55
+    array_id        go to state 56
+    literals        go to state 57
+
+
+State 151
+
+   16 var_dec: VAR identifier .
+   17        | VAR identifier . COLON types
+   18        | VAR identifier . ASSIGN expr
+   19        | VAR identifier . COLON types ASSIGN expr
+
+    COLON   shift, and go to state 164
+    ASSIGN  shift, and go to state 31
+
+    $default  reduce using rule 16 (var_dec)
+
+
+State 152
+
+   51 if_cond: IF LEFT_PARENTHESE . expr RIGHT_PARENTHESE cond_body
+   52        | IF LEFT_PARENTHESE . expr RIGHT_PARENTHESE cond_body ELSE cond_body
+
+    LEFT_PARENTHESE  shift, and go to state 42
+    PRINT            shift, and go to state 43
+    PRINTLN          shift, and go to state 44
+    READ             shift, and go to state 45
+    ID               shift, and go to state 5
+    INT_LITERAL      shift, and go to state 46
+    REAL_LITERAL     shift, and go to state 47
+    STRING_LITERAL   shift, and go to state 48
+    '!'              shift, and go to state 49
+    '-'              shift, and go to state 50
+
+    print_stmt      go to state 51
+    read_stmt       go to state 52
+    func_invo_stmt  go to state 53
+    expr            go to state 165
+    identifier      go to state 55
+    array_id        go to state 56
+    literals        go to state 57
+
+
+State 153
+
+   43 return_stmt: RETURN return_body .
+
+    $default  reduce using rule 43 (return_stmt)
+
+
+State 154
+
+   44 return_body: expr .
+   70 expr: expr . '*' expr
+   71     | expr . '/' expr
+   72     | expr . '+' expr
+   73     | expr . '-' expr
+   74     | expr . LT expr
+   75     | expr . LE expr
+   76     | expr . EQ expr
+   77     | expr . GE expr
+   78     | expr . GT expr
+   79     | expr . NE expr
+   81     | expr . AND expr
+   82     | expr . OR expr
+
+    OR   shift, and go to state 68
+    AND  shift, and go to state 69
+    LT   shift, and go to state 70
+    GT   shift, and go to state 71
+    LE   shift, and go to state 72
+    GE   shift, and go to state 73
+    EQ   shift, and go to state 74
+    NE   shift, and go to state 75
+    '-'  shift, and go to state 76
+    '+'  shift, and go to state 77
+    '*'  shift, and go to state 78
+    '/'  shift, and go to state 79
+
+    $default  reduce using rule 44 (return_body)
+
+
+State 155
+
+   23 func_def_remain: LEFT_CURLY block_body RIGHT_CURLY .
+
+    $default  reduce using rule 23 (func_def_remain)
+
+
+State 156
+
+   63 block_body: block_body val_dec .
+
+    $default  reduce using rule 63 (block_body)
+
+
+State 157
+
+   65 block_body: block_body var_dec .
+
+    $default  reduce using rule 65 (block_body)
+
+
+State 158
+
+   67 block_body: block_body stmt .
+
+    $default  reduce using rule 67 (block_body)
+
+
+State 159
+
+   39 assign_stmt: identifier ASSIGN . expr
+
+    LEFT_PARENTHESE  shift, and go to state 42
+    PRINT            shift, and go to state 43
+    PRINTLN          shift, and go to state 44
+    READ             shift, and go to state 45
+    ID               shift, and go to state 5
+    INT_LITERAL      shift, and go to state 46
+    REAL_LITERAL     shift, and go to state 47
+    STRING_LITERAL   shift, and go to state 48
+    '!'              shift, and go to state 49
+    '-'              shift, and go to state 50
+
+    print_stmt      go to state 51
+    read_stmt       go to state 52
+    func_invo_stmt  go to state 53
+    expr            go to state 166
+    identifier      go to state 55
+    array_id        go to state 56
+    literals        go to state 57
+
+
+State 160
+
+   40 assign_stmt: array_id ASSIGN . expr
+
+    LEFT_PARENTHESE  shift, and go to state 42
+    PRINT            shift, and go to state 43
+    PRINTLN          shift, and go to state 44
+    READ             shift, and go to state 45
+    ID               shift, and go to state 5
+    INT_LITERAL      shift, and go to state 46
+    REAL_LITERAL     shift, and go to state 47
+    STRING_LITERAL   shift, and go to state 48
+    '!'              shift, and go to state 49
+    '-'              shift, and go to state 50
+
+    print_stmt      go to state 51
+    read_stmt       go to state 52
+    func_invo_stmt  go to state 53
+    expr            go to state 167
+    identifier      go to state 55
+    array_id        go to state 56
+    literals        go to state 57
+
+
+State 161
+
+   24 func_def_remain: COLON types LEFT_CURLY block_body . RIGHT_CURLY
+   63 block_body: block_body . val_dec
+   65           | block_body . var_dec
+   67           | block_body . stmt
+
+    RIGHT_CURLY  shift, and go to state 168
+    FOR          shift, and go to state 129
+    WHILE        shift, and go to state 130
+    VAL          shift, and go to state 8
+    VAR          shift, and go to state 131
+    PRINT        shift, and go to state 43
+    PRINTLN      shift, and go to state 44
+    READ         shift, and go to state 45
+    IF           shift, and go to state 132
+    RETURN       shift, and go to state 133
+    ID           shift, and go to state 5
+
+    val_dec         go to state 156
+    var_dec         go to state 157
+    stmt            go to state 158
+    assign_stmt     go to state 137
+    print_stmt      go to state 138
+    return_stmt     go to state 139
+    read_stmt       go to state 140
+    func_invo_stmt  go to state 141
+    if_cond         go to state 142
+    while_loop      go to state 143
+    for_loop        go to state 144
+    identifier      go to state 146
+    array_id        go to state 147
+
+
+State 162
+
+   58 for_loop: FOR LEFT_PARENTHESE identifier . FOR_ASSIGN INT_LITERAL TO INT_LITERAL RIGHT_PARENTHESE loop_body
+
+    FOR_ASSIGN  shift, and go to state 169
+
+
+State 163
+
+   55 while_loop: WHILE LEFT_PARENTHESE expr . RIGHT_PARENTHESE while_body
+   70 expr: expr . '*' expr
+   71     | expr . '/' expr
+   72     | expr . '+' expr
+   73     | expr . '-' expr
+   74     | expr . LT expr
+   75     | expr . LE expr
+   76     | expr . EQ expr
+   77     | expr . GE expr
+   78     | expr . GT expr
+   79     | expr . NE expr
+   81     | expr . AND expr
+   82     | expr . OR expr
+
+    RIGHT_PARENTHESE  shift, and go to state 170
+    OR                shift, and go to state 68
+    AND               shift, and go to state 69
+    LT                shift, and go to state 70
+    GT                shift, and go to state 71
+    LE                shift, and go to state 72
+    GE                shift, and go to state 73
+    EQ                shift, and go to state 74
+    NE                shift, and go to state 75
+    '-'               shift, and go to state 76
+    '+'               shift, and go to state 77
+    '*'               shift, and go to state 78
+    '/'               shift, and go to state 79
+
+
+State 164
+
+   17 var_dec: VAR identifier COLON . types
+   19        | VAR identifier COLON . types ASSIGN expr
+
+    CHAR     shift, and go to state 35
+    INT      shift, and go to state 36
+    FLOAT    shift, and go to state 37
+    STRING   shift, and go to state 38
+    BOOLEAN  shift, and go to state 39
+    VOID     shift, and go to state 40
+
+    types  go to state 171
+
+
+State 165
+
+   51 if_cond: IF LEFT_PARENTHESE expr . RIGHT_PARENTHESE cond_body
+   52        | IF LEFT_PARENTHESE expr . RIGHT_PARENTHESE cond_body ELSE cond_body
+   70 expr: expr . '*' expr
+   71     | expr . '/' expr
+   72     | expr . '+' expr
+   73     | expr . '-' expr
+   74     | expr . LT expr
+   75     | expr . LE expr
+   76     | expr . EQ expr
+   77     | expr . GE expr
+   78     | expr . GT expr
+   79     | expr . NE expr
+   81     | expr . AND expr
+   82     | expr . OR expr
+
+    RIGHT_PARENTHESE  shift, and go to state 172
+    OR                shift, and go to state 68
+    AND               shift, and go to state 69
+    LT                shift, and go to state 70
+    GT                shift, and go to state 71
+    LE                shift, and go to state 72
+    GE                shift, and go to state 73
+    EQ                shift, and go to state 74
+    NE                shift, and go to state 75
+    '-'               shift, and go to state 76
+    '+'               shift, and go to state 77
+    '*'               shift, and go to state 78
+    '/'               shift, and go to state 79
+
+
+State 166
+
+   39 assign_stmt: identifier ASSIGN expr .
+   70 expr: expr . '*' expr
+   71     | expr . '/' expr
+   72     | expr . '+' expr
+   73     | expr . '-' expr
+   74     | expr . LT expr
+   75     | expr . LE expr
+   76     | expr . EQ expr
+   77     | expr . GE expr
+   78     | expr . GT expr
+   79     | expr . NE expr
+   81     | expr . AND expr
+   82     | expr . OR expr
+
+    OR   shift, and go to state 68
+    AND  shift, and go to state 69
+    LT   shift, and go to state 70
+    GT   shift, and go to state 71
+    LE   shift, and go to state 72
+    GE   shift, and go to state 73
+    EQ   shift, and go to state 74
+    NE   shift, and go to state 75
+    '-'  shift, and go to state 76
+    '+'  shift, and go to state 77
+    '*'  shift, and go to state 78
+    '/'  shift, and go to state 79
+
+    $default  reduce using rule 39 (assign_stmt)
+
+
+State 167
+
+   40 assign_stmt: array_id ASSIGN expr .
+   70 expr: expr . '*' expr
+   71     | expr . '/' expr
+   72     | expr . '+' expr
+   73     | expr . '-' expr
+   74     | expr . LT expr
+   75     | expr . LE expr
+   76     | expr . EQ expr
+   77     | expr . GE expr
+   78     | expr . GT expr
+   79     | expr . NE expr
+   81     | expr . AND expr
+   82     | expr . OR expr
+
+    OR   shift, and go to state 68
+    AND  shift, and go to state 69
+    LT   shift, and go to state 70
+    GT   shift, and go to state 71
+    LE   shift, and go to state 72
+    GE   shift, and go to state 73
+    EQ   shift, and go to state 74
+    NE   shift, and go to state 75
+    '-'  shift, and go to state 76
+    '+'  shift, and go to state 77
+    '*'  shift, and go to state 78
+    '/'  shift, and go to state 79
+
+    $default  reduce using rule 40 (assign_stmt)
+
+
+State 168
+
+   24 func_def_remain: COLON types LEFT_CURLY block_body RIGHT_CURLY .
+
+    $default  reduce using rule 24 (func_def_remain)
+
+
+State 169
+
+   58 for_loop: FOR LEFT_PARENTHESE identifier FOR_ASSIGN . INT_LITERAL TO INT_LITERAL RIGHT_PARENTHESE loop_body
+
+    INT_LITERAL  shift, and go to state 173
+
+
+State 170
+
+   55 while_loop: WHILE LEFT_PARENTHESE expr RIGHT_PARENTHESE . while_body
+
+    LEFT_CURLY  shift, and go to state 174
+    FOR         shift, and go to state 129
+    WHILE       shift, and go to state 130
+    PRINT       shift, and go to state 43
+    PRINTLN     shift, and go to state 44
+    READ        shift, and go to state 45
+    IF          shift, and go to state 132
+    RETURN      shift, and go to state 133
+    ID          shift, and go to state 5
+
+    stmt            go to state 175
+    assign_stmt     go to state 137
+    print_stmt      go to state 138
+    return_stmt     go to state 139
+    read_stmt       go to state 140
+    func_invo_stmt  go to state 141
+    if_cond         go to state 142
+    while_loop      go to state 143
+    while_body      go to state 176
+    for_loop        go to state 144
+    block           go to state 177
+    identifier      go to state 146
+    array_id        go to state 147
+
+
+State 171
+
+   17 var_dec: VAR identifier COLON types .
+   19        | VAR identifier COLON types . ASSIGN expr
+
+    ASSIGN  shift, and go to state 83
+
+    $default  reduce using rule 17 (var_dec)
+
+
+State 172
+
+   51 if_cond: IF LEFT_PARENTHESE expr RIGHT_PARENTHESE . cond_body
+   52        | IF LEFT_PARENTHESE expr RIGHT_PARENTHESE . cond_body ELSE cond_body
+
+    LEFT_CURLY  shift, and go to state 174
+    FOR         shift, and go to state 129
+    WHILE       shift, and go to state 130
+    PRINT       shift, and go to state 43
+    PRINTLN     shift, and go to state 44
+    READ        shift, and go to state 45
+    IF          shift, and go to state 132
+    RETURN      shift, and go to state 133
+    ID          shift, and go to state 5
+
+    stmt            go to state 178
+    assign_stmt     go to state 137
+    print_stmt      go to state 138
+    return_stmt     go to state 139
+    read_stmt       go to state 140
+    func_invo_stmt  go to state 141
+    if_cond         go to state 142
+    cond_body       go to state 179
+    while_loop      go to state 143
+    for_loop        go to state 144
+    block           go to state 180
+    identifier      go to state 146
+    array_id        go to state 147
+
+
+State 173
+
+   58 for_loop: FOR LEFT_PARENTHESE identifier FOR_ASSIGN INT_LITERAL . TO INT_LITERAL RIGHT_PARENTHESE loop_body
+
+    TO  shift, and go to state 181
+
+
+State 174
+
+   61 block: LEFT_CURLY . block_body RIGHT_CURLY
+
+    FOR      shift, and go to state 129
+    WHILE    shift, and go to state 130
+    VAL      shift, and go to state 8
+    VAR      shift, and go to state 131
+    PRINT    shift, and go to state 43
+    PRINTLN  shift, and go to state 44
+    READ     shift, and go to state 45
+    IF       shift, and go to state 132
+    RETURN   shift, and go to state 133
+    ID       shift, and go to state 5
+
+    val_dec         go to state 134
+    var_dec         go to state 135
+    stmt            go to state 136
+    assign_stmt     go to state 137
+    print_stmt      go to state 138
+    return_stmt     go to state 139
+    read_stmt       go to state 140
+    func_invo_stmt  go to state 141
+    if_cond         go to state 142
+    while_loop      go to state 143
+    for_loop        go to state 144
+    block_body      go to state 182
+    identifier      go to state 146
+    array_id        go to state 147
+
+
+State 175
+
+   57 while_body: stmt .
+
+    $default  reduce using rule 57 (while_body)
+
+
+State 176
+
+   55 while_loop: WHILE LEFT_PARENTHESE expr RIGHT_PARENTHESE while_body .
+
+    $default  reduce using rule 55 (while_loop)
+
+
+State 177
+
+   56 while_body: block .
+
+    $default  reduce using rule 56 (while_body)
+
+
+State 178
+
+   54 cond_body: stmt .
+
+    $default  reduce using rule 54 (cond_body)
+
+
+State 179
+
+   51 if_cond: IF LEFT_PARENTHESE expr RIGHT_PARENTHESE cond_body .
+   52        | IF LEFT_PARENTHESE expr RIGHT_PARENTHESE cond_body . ELSE cond_body
+
+    ELSE  shift, and go to state 183
+
+    ELSE      [reduce using rule 51 (if_cond)]
+    $default  reduce using rule 51 (if_cond)
+
+
+State 180
+
+   53 cond_body: block .
+
+    $default  reduce using rule 53 (cond_body)
+
+
+State 181
+
+   58 for_loop: FOR LEFT_PARENTHESE identifier FOR_ASSIGN INT_LITERAL TO . INT_LITERAL RIGHT_PARENTHESE loop_body
+
+    INT_LITERAL  shift, and go to state 184
+
+
+State 182
+
+   61 block: LEFT_CURLY block_body . RIGHT_CURLY
+   63 block_body: block_body . val_dec
+   65           | block_body . var_dec
+   67           | block_body . stmt
+
+    RIGHT_CURLY  shift, and go to state 185
+    FOR          shift, and go to state 129
+    WHILE        shift, and go to state 130
+    VAL          shift, and go to state 8
+    VAR          shift, and go to state 131
+    PRINT        shift, and go to state 43
+    PRINTLN      shift, and go to state 44
+    READ         shift, and go to state 45
+    IF           shift, and go to state 132
+    RETURN       shift, and go to state 133
+    ID           shift, and go to state 5
+
+    val_dec         go to state 156
+    var_dec         go to state 157
+    stmt            go to state 158
+    assign_stmt     go to state 137
+    print_stmt      go to state 138
+    return_stmt     go to state 139
+    read_stmt       go to state 140
+    func_invo_stmt  go to state 141
+    if_cond         go to state 142
+    while_loop      go to state 143
+    for_loop        go to state 144
+    identifier      go to state 146
+    array_id        go to state 147
+
+
+State 183
+
+   52 if_cond: IF LEFT_PARENTHESE expr RIGHT_PARENTHESE cond_body ELSE . cond_body
+
+    LEFT_CURLY  shift, and go to state 174
+    FOR         shift, and go to state 129
+    WHILE       shift, and go to state 130
+    PRINT       shift, and go to state 43
+    PRINTLN     shift, and go to state 44
+    READ        shift, and go to state 45
+    IF          shift, and go to state 132
+    RETURN      shift, and go to state 133
+    ID          shift, and go to state 5
+
+    stmt            go to state 178
+    assign_stmt     go to state 137
+    print_stmt      go to state 138
+    return_stmt     go to state 139
+    read_stmt       go to state 140
+    func_invo_stmt  go to state 141
+    if_cond         go to state 142
+    cond_body       go to state 186
+    while_loop      go to state 143
+    for_loop        go to state 144
+    block           go to state 180
+    identifier      go to state 146
+    array_id        go to state 147
+
+
+State 184
+
+   58 for_loop: FOR LEFT_PARENTHESE identifier FOR_ASSIGN INT_LITERAL TO INT_LITERAL . RIGHT_PARENTHESE loop_body
+
+    RIGHT_PARENTHESE  shift, and go to state 187
+
+
+State 185
+
+   61 block: LEFT_CURLY block_body RIGHT_CURLY .
+
+    $default  reduce using rule 61 (block)
+
+
+State 186
+
+   52 if_cond: IF LEFT_PARENTHESE expr RIGHT_PARENTHESE cond_body ELSE cond_body .
+
+    $default  reduce using rule 52 (if_cond)
+
+
+State 187
+
+   58 for_loop: FOR LEFT_PARENTHESE identifier FOR_ASSIGN INT_LITERAL TO INT_LITERAL RIGHT_PARENTHESE . loop_body
+
+    LEFT_CURLY  shift, and go to state 174
+    FOR         shift, and go to state 129
+    WHILE       shift, and go to state 130
+    PRINT       shift, and go to state 43
+    PRINTLN     shift, and go to state 44
+    READ        shift, and go to state 45
+    IF          shift, and go to state 132
+    RETURN      shift, and go to state 133
+    ID          shift, and go to state 5
+
+    stmt            go to state 188
+    assign_stmt     go to state 137
+    print_stmt      go to state 138
+    return_stmt     go to state 139
+    read_stmt       go to state 140
+    func_invo_stmt  go to state 141
+    if_cond         go to state 142
+    while_loop      go to state 143
+    for_loop        go to state 144
+    loop_body       go to state 189
+    block           go to state 190
+    identifier      go to state 146
+    array_id        go to state 147
+
+
+State 188
+
+   60 loop_body: stmt .
+
+    $default  reduce using rule 60 (loop_body)
+
+
+State 189
+
+   58 for_loop: FOR LEFT_PARENTHESE identifier FOR_ASSIGN INT_LITERAL TO INT_LITERAL RIGHT_PARENTHESE loop_body .
+
+    $default  reduce using rule 58 (for_loop)
+
+
+State 190
+
+   59 loop_body: block .
+
+    $default  reduce using rule 59 (loop_body)

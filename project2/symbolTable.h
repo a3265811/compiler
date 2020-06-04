@@ -8,8 +8,8 @@
 typedef struct _node{
 	struct _node *pre;
 	struct _node *next;
-   char  idName[idName_size];  
-	char type[100];
+   char  *idName;  
+	char  *type;
 }node;
 
 //data type for every hash entry
@@ -38,7 +38,7 @@ void copyTable(table*, table*);
 void deleteTable();
 
 //search specific data in specific symbol talbe
-node* lookup(table *searchTable, char*);
+node* lookup(table *searchTable, char*,int);
 
 //insert data to specific symbol table
 node* insert(table*,char*,char*);

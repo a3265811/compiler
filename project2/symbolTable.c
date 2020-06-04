@@ -19,7 +19,7 @@ void createTable(){
 	/*
 		when encounter a function brackets we need to copy the same symbol table
 		if not just create a talbe
-	*/
+	
 	if(tableList == NULL){
 		temp_t->pre = NULL;
 		temp_t->next = NULL;
@@ -30,7 +30,14 @@ void createTable(){
 		temp_t->pre = tableList;
 		tableList->next = temp_t;
 		tableList = temp_t;
-	}
+	}*/
+	
+	if(tableList == NULL)
+		temp_t->pre = NULL;
+	else
+		temp_t->pre = tableList;
+	temp_t->next = NULL;
+	tableList = temp_t;
 }
 
 //copy last symbol table
@@ -56,23 +63,20 @@ void deleteTable(){
 }
 
 //search specific data in specific symbol talbe
-node* lookup(table *searchTable, char* str){	
-	list_head *entry = NULL;
+node* lookup(table *searchTable, char* str,int insert_mode){	
+	table *now_table = searchTable;
 	node *now = NULL;			
-	//get the address of hash entry
-	entry = searchTable->idTable[hash_f(str)];
-	/*
-		if entry of hash table is empty just break
-		search linked list until find the data
-		if find data return address
-		if not return NULL
-	*/
-	if(entry == NULL)
-		return now; 
-	else{
-		if(entry->head == NULL || entry->tail == NULL)
-			return now;
-		else{
+	while(now_table != NULL){
+		list_head *entry = NULL;
+		//get the address of hash entry
+		entry = now_table->idTable[hash_f(str)];
+		/*
+			if entry of hash table is empty just break
+			search linked list until find the data
+			if find data return address
+			if not return NULL
+		*/
+		if(entry != NULL){
 			now = entry->head;
 			while(now != NULL){
 				if(strcmp(str,now->idName) == 0)
@@ -80,17 +84,27 @@ node* lookup(table *searchTable, char* str){
 				else
 					now = now->next;
 			}
-		}
+  		}
+		/*
+			check wether find the data in the symbol table
+			if not, continue search previous table
+		*/
+		if(now != NULL)
+			break;
+		else if(insert_mode == 1)
+			break;
+		else
+			now_table = now_table->pre;
 	}
 	return now;
 }
 
 //insert data to specific symbol table
-node* insert(table *insertTable,char *str,char *type){
+node* insert(table *insertTable,char *str,char* type){
 	list_head *entry = NULL;
 	node *now = NULL;
 	//check wether identifier is in the symbol table
-	now = lookup(insertTable,str);
+	now = lookup(insertTable,str,1);
 	if(now != NULL)
 		return now;
 	/*
@@ -100,10 +114,14 @@ node* insert(table *insertTable,char *str,char *type){
 	*/
 	now = NULL;//reset now
 	node *temp_n = malloc(sizeof(node));
+	temp_n->pre = NULL;
+	temp_n->next = NULL;
+	temp_n->idName = NULL;
+	temp_n->type = NULL;
+	temp_n->idName = malloc(sizeof(char) * (strlen(str)+1));
+	temp_n->type = malloc(sizeof(char) * (strlen(type)+1));
 	strcpy(temp_n->idName,str);
-	//if know what type is and copy to temp_n
-	if(strcmp(type,"Nothing") != 0)
-		strcpy(temp_n->type,type);
+	strcpy(temp_n->type,type);
 	//get the address of hash entry
 	entry = insertTable->idTable[hash_f(str)];
 	/*
@@ -142,6 +160,7 @@ void dump(table *dumpTable){
 		now = entry->head;
 		while(now != NULL){
 			printf(" %s",now->idName);
+			printf(" %s",now->type);
 			printf(" %p",now);
 			now = now->next;
 		}
