@@ -1,0 +1,71 @@
+/* 1: # */
+/* 2: # * Example with Functions */
+/* 3: #  */
+/* 4:  */
+class example 
+{
+/* 5: object example { */
+/* 6:   val a = 5 */
+/* 7:  */
+/* 8:   # function declaration */
+method public static int add(int, int)
+max_stack 15
+max_locals 15
+{
+/* 9:   def add (a: int, b: int) : int */
+/* 10:   { */
+iload 0
+/* 11:     return a+b */
+iload 1
+iadd
+ireturn
+}
+/* 12:   } */
+/* 13:    */
+/* 14:   # main statements */
+/* 15:   def main() */
+method public static void main(java.lang.String[])
+max_stack 15
+max_locals 15
+{
+/* 16:   { */
+/* 17:     var c:int */
+sipush 5
+sipush 10
+invokestatic int example.add(int, int)
+/* 18:     c = add(a, 10) */
+istore 0
+/* if start */
+iload 0
+sipush 10
+isub
+ifgt L0
+iconst_0
+goto L1
+L0:
+iconst_1
+L1:
+ifeq L2
+/* 19:     if (c > 10) */
+getstatic java.io.PrintStream java.lang.System.out
+iload 0
+ineg
+invokevirtual void java.io.PrintStream.print(int)
+/* 20:       print (-c) */
+goto L3
+L2:
+/* 21:     else */
+getstatic java.io.PrintStream java.lang.System.out
+iload 0
+invokevirtual void java.io.PrintStream.print(int)
+/* if end */
+L3:
+/* 22:       print (c) */
+getstatic java.io.PrintStream java.lang.System.out
+ldc "Hello World"
+invokevirtual void java.io.PrintStream.println(java.lang.String)
+/* 23:     println ("Hello World") */
+return
+}
+/* 24:   } */
+}/* 25: } */
