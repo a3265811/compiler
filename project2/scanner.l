@@ -3,14 +3,9 @@
 #include "y.tab.h"
 #define MAX_LINE_LENG 256 //max string length
 #define LIST strcat(buf,yytext)  //string concatenation function
-#define token(t) {LIST;sprintf(result,"%d",t); printf("<%s>\n",result);return t;} //print keyword and some operators
-#define tokenInteger(t,i) {LIST; printf("<%s:%d>\n",t,i);} //print interger number 
-#define tokenString(t,s) {LIST; printf("<%s:%s>\n",t,s);} //print float number and string
 int linenum = 1; //line counter
 char buf[MAX_LINE_LENG]; //output string
-char outputStr[MAX_LINE_LENG];//extra output string for recognizing stringi
-char result[MAX_LINE_LENG];
-char *temp_string;
+char outputStr[MAX_LINE_LENG];//extra output string for recognizing string
 char c;
 %}
 digit [0-9]+
@@ -20,65 +15,97 @@ letter [A-Za-z]+
 %x STRING_STATE
 
 %%
-[ ]*	 ;	//whitespace
-[ \t]* ;	//tabspace
-","	 return COMMA;// -----Delimiters-----
-":"	 return COLON;//			|
-"."	 return PERIOD;//			|
-";"	 return SEMICOLON;//			|
-"("    return LEFT_PARENTHESE;//			|
-")"	 return RIGHT_PARENTHESE;//			|
-"["	 return LEFT_SQUARE;//			|
-"]"	 return RIGHT_SQUARE;//			|
-"{"	 return LEFT_CURLY;//			|
-"}"	 return RIGHT_CURLY;//			|
-"="	 return ASSIGN; // --------------------
-"+"	 return '+';// -----Arithmetic,Rational,and Logical Operators-----
-"-"	 return '-';//								|
-"*"	 return '*';//								|
-"/"	 return '/';//								|
-"%"	 return '%';//                        |      
-"<"	 return LT;//                        |      
-"<="	 return LE;//                       |      
-">="	 return GE;//                       |      
-">"	 return GT;//                        |      
-"=="	 return EQ;//                       |      
-"!="	 return NE;//                       |      
-"&&"	 return AND;//                       |      
-"||"	 return OR;//                       |      
-"<-"   return FOR_ASSIGN;//
-"!"	 return '!';// ---------------------------------------------------
-"val"	 return VAL;//                   |     
-"var"	 return VAR;//                   |     
-"boolean" {yylval.string = "boolean"; return BOOLEAN;}// -----Keywords-----
-"int"     {yylval.string = "int"; return INT;}     
-"char"	 {yylval.string = "char"; return CHAR;}//               |     
-"string"	 {yylval.string = "string";  return STRING;}//             |     
-"float"	 {yylval.string = "float"; return FLOAT;}//              |     
-"void"    {yylval.string = "void"; return VOID;}
-"break"	 return BREAK;//					|
-"case"	 return CASE;//               |     
-"class"	 return CLASS;//              |     
-"continue"	 return CONTINUE;//        |     
-"def"	 {return DEF;}//                   |     
-"do"	 return DO;//                    |     
-"else"	 return ELSE;//               |     
-"exit"	 return EXIT;//               |     
-"for"	 return FOR;//                   |     
-"if"	 return IF;//                    |     
-"null"	 return NULL_LITERAL;//               |     
-"object"	 return OBJECT;//             |     
-"print"	 return PRINT;//              |     
-"println"	 return PRINTLN;//         |     
-"repeat"	 return REPEAT;//             |     
-"return"	 return RETURN;//             |     
-"to"	 return TO;//                    |     
-"type"	 return TYPE;//               |     
-"while"	 return WHILE;//     -------------------
-"true" return TRUE;	//Boolean Constants
-"false" return FALSE;	//Boolean Constants
+ /* -----whilespace and tabspace------ */
+[ ]*	 ;
+[ \t]* ;
+ /* -----Delimiters----- */
+","	 return COMMA;
+":"	 return COLON;
+"."	 return PERIOD;
+";"	 return SEMICOLON;
+"("    return LEFT_PARENTHESE;
+")"	 return RIGHT_PARENTHESE;
+"["	 return LEFT_SQUARE;
+"]"	 return RIGHT_SQUARE;
+"{"	 return LEFT_CURLY;
+"}"	 return RIGHT_CURLY;
+"="	 return ASSIGN;
+ /* -----Arithmetic,Rational, and Logical Operators----- */
+"+"	 return '+';
+"-"	 return '-';
+"*"	 return '*';
+"/"	 return '/';
+"%"	 return '%';
+"<"	 return LT;
+"<="	 return LE;
+">="	 return GE;
+">"	 return GT;
+"=="	 return EQ;
+"!="	 return NE;
+"&&"	 return AND;
+"||"	 return OR;
+"<-"   return FOR_ASSIGN;
+"!"	 return '!';
+ /* -----Keywords----- */
+"val"	 return VAL;
+"var"	 return VAR;
+"boolean" {
+			  yylval.string = "boolean";
+  			  return BOOLEAN;
+			 }
+"int"     {
+			  yylval.string = "int"; 
+			  return INT;
+			 }
+"char"	 {
+			  yylval.string = "char"; 
+			  return CHAR;
+			 }
+"string"	 {
+			  yylval.string = "string";  
+			  return STRING;
+			 }
+"float"	 {
+			  yylval.string = "float"; 
+			  return FLOAT;
+			 }
+"void"    {
+			  yylval.string = "void"; 
+			  return VOID;
+			 }
+"break"	 return BREAK;
+"case"	 return CASE;     
+"class"	 return CLASS;     
+"continue"	 return CONTINUE;     
+"def"	 return DEF;
+"do"	 return DO;                        
+"else"	 return ELSE;     
+"exit"	 return EXIT;     
+"for"	 return FOR;     
+"if"	 return IF;     
+"null"	 return NULL_LITERAL;     
+"object"	 return OBJECT;     
+"print"	 return PRINT;     
+"println"	 return PRINTLN;     
+"repeat"	 return REPEAT;     
+"return"	 return RETURN;     
+"to"	 return TO;     
+"type"	 return TYPE;     
+"while"	 return WHILE;
 "read" return READ;
-\n 	 linenum++;	/*newline*/
+ /* -----Boolean Constants----- */
+"true" return TRUE;
+"false" return FALSE;
+ /* -----newline----- */
+\n 	 {
+			if(buf[0]!='\0'){
+			LIST;
+			printf("%d:%s",linenum,buf);
+			}
+			buf[0] = '\0';
+			linenum++;
+		 }
+ /* -----constant----- */
 {digit} {
 			yylval.string = "int";
 			return INT_LITERAL;
@@ -87,17 +114,14 @@ letter [A-Za-z]+
 													  yylval.string = "float";
 													  return REAL_LITERAL;
 													}
+ /* -----Identifiers----- */ 
 {letter}({letter}|{digit})*	{
-									    //insert(tableList,yytext, 0);
 										 yylval.string = malloc(sizeof(char)*(strlen(yytext)+1));
-										 /*for(int i = 0; i < strlen(yytext);i++){
-										 	temp_string[i] = yytext[i];
-										 }*/
 										 strcpy(yylval.string,yytext);
 										 return ID;
-									   } /*Identifiers, and insert into symbol table*/
+									   }
+ /* -----String----- */
 "\""	{
-		LIST;
 		outputStr[0]='\0';		
 		BEGIN STRING_STATE;
 		} /*switch to string state*/
@@ -109,8 +133,8 @@ letter [A-Za-z]+
 				 else{
 			 	 	 unput(c);
 				 	 yytext = "\"";
-				  	 BEGIN 0;
 					 yylval.string = "string";
+				  	 BEGIN 0;
 					 return STRING_LITERAL;
 				  }
 				 } /*solving the extra \" and back to initial state. If get more character then yytext will be wrong,so we need to set yytext back to last charater.*/
@@ -128,6 +152,7 @@ letter [A-Za-z]+
 			 strcat(outputStr,yytext);
 			 } /*any character put into output string*/
 
+ /*-----Comments----- */
 "//"	{
 		LIST;
 		BEGIN oneCOMMENT;
@@ -157,7 +182,8 @@ letter [A-Za-z]+
 				  } /*end of cross-line commend and back to initial state*/
 <COMMENT>. LIST; //any character put into output string
 
-	/*any other charactor will be discard*/
+
+ /*any other charactor will be discard*/
 .       {
         LIST;
         printf("%d:%s\n", linenum+1, buf);
@@ -165,7 +191,3 @@ letter [A-Za-z]+
         return yytext[0];
         } 
 %%
-/*int main(){
-	yylex();
-	return 0;
-}*/

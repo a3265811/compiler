@@ -10,6 +10,7 @@ typedef struct _node{
 	struct _node *next;
    char  *idName;  
 	char  *type;
+	int args[256];
 }node;
 
 //data type for every hash entry
@@ -31,9 +32,6 @@ int hash_f(char*);
 //create a symbol table
 void createTable();
 
-//copy last symbol table
-void copyTable(table*, table*);
-
 //delete symbol table
 void deleteTable();
 
@@ -46,4 +44,5 @@ node* insert(table*,char*,char*);
 //show the specific symbol table
 void dump(table*);
 
+//predefine table pointer
 table *tableList;
